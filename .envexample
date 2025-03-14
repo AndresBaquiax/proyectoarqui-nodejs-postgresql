@@ -1,0 +1,8 @@
+Generar SECRET_KEY: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+SECRET_KEY=
+PORT = 4000
+
+DB_USER = root
+DB_PASSWORD =
+DB_SERVER = localhost
+DB_DATABASE = taller_repuestos
