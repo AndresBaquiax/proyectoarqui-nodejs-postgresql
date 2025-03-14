@@ -1,20 +1,20 @@
-<h1 align="left">📂 Vehicle Maintenance Service</h1>
+<h1 align="left">📂 Servicio de mantenimiento de vehículos</h1>
 
 ###
 
-<p align="left">Hello everyone, this is our final project of systems architecture systems architecture 2.</p>
+<p align="left">Hola a todos, este es nuestro proyecto final de arquitectura de sistemas arquitectura de sistemas II.</p>
 
 ###
 
-<h2 align="left">About the proyect</h2>
+<h2 align="left">Sobre el proyecto</h2>
 
 ###
 
-<p align="left">📢This system allows the management of a vehicle maintenance business, including repair, washing and maintenance services, as well as inventory management and sales.<br><br>🎯 Made in NodeJS using ExpressJS</p>
+<p align="left">📢Este sistema permite la gestión de un negocio de mantenimiento de vehículos, incluyendo los servicios de reparación, lavado y mantenimiento, así como la gestión de inventario y ventas.<br><br>🎯 Hecho en NodeJS usando ExpressJS.</p>
 
 ###
 
-<h2 align="left">🚩 Technologies used</h2>
+<h2 align="left">🚩 Tecnologias usadas</h2>
 
 ###
 
