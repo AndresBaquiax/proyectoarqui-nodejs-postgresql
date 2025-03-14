@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import config from './config.js';
 import cors from 'cors'; 
 //Import routes
-
+import empleadosRoutes from './routes/empleados.routes.js';
 
 dotenv.config();
 const app = express();
@@ -17,7 +17,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: false}));
 
 //Routes
-
+app.use("/tallerrepuestos", empleadosRoutes);
 
 
 export default app;
