@@ -6,3 +6,4 @@ DB_USER = root
 DB_PASSWORD =
 DB_SERVER = localhost
 DB_DATABASE = taller_repuestos
+DB_PORT = 5432
