@@ -18,7 +18,7 @@ export const getEmpleados = async (req, res) => {
 export const prueba = async (req, res) => {
     try {
         res.json({
-            message: "Conexión exitosa"
+            message: "Miguel trash"
         });
     } catch (error) {
         res.status(500).send(error.message);
