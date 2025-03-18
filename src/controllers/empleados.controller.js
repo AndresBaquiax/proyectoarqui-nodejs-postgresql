@@ -18,7 +18,7 @@ export const getEmpleados = async (req, res) => {
 export const prueba = async (req, res) => {
     try {
         res.json({
-            message: "Miguel trash"
+            message: "Hola tonotos, esta es una prueba usando vercel como host de la API"
         });
     } catch (error) {
         res.status(500).send(error.message);
