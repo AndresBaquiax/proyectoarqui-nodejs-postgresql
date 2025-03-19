@@ -5,6 +5,7 @@ import cors from 'cors';
 //Import routes
 import empleadosRoutes from './routes/empleados.routes.js';
 import clienteRoutes from './routes/cliente.routes.js';
+import vehiculoRoutes from './routes/vehiculo.routes.js';
 
 dotenv.config();
 const app = express();
@@ -20,5 +21,6 @@ app.use(express.urlencoded({extended: false}));
 //Routes
 app.use("/tallerrepuestos", empleadosRoutes);
 app.use('/api', clienteRoutes);
+app.use('/api', vehiculoRoutes);
 
 export default app;

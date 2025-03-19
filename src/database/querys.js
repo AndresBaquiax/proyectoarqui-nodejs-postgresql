@@ -12,3 +12,12 @@ export const querysClientes = {
     updateCliente: 'UPDATE cliente SET nombre = $1, apellido = $2, nit = $3, telefono = $4, email = $5, status = $6, updated_at = NOW() WHERE idcliente = $7 RETURNING *',
     deleteCliente: 'UPDATE cliente SET status = 0, updated_at = NOW() WHERE idcliente = $1'
 };
+
+
+export const querysVehiculos = {
+    getVehiculos: 'SELECT * FROM vehiculo ORDER BY idvehiculo',
+    getVehiculoById: 'SELECT * FROM vehiculo WHERE idvehiculo = $1',
+    createVehiculo: 'INSERT INTO vehiculo (placa, marca, modelo, anio, tipovehiculo, idcliente, status, created_at, updated_at) VALUES ($1, $2, $3, $4::INTEGER, $5, $6, $7, NOW(), NOW()) RETURNING *',
+    updateVehiculo: 'UPDATE vehiculo SET placa = $1, marca = $2, modelo = $3, anio = $4, tipovehiculo = $5, idcliente = $6, status = $7, updated_at = NOW() WHERE idvehiculo = $8 RETURNING *',
+    deleteVehiculo: 'UPDATE vehiculo SET status = 0, updated_at = NOW() WHERE idvehiculo = $1'
+};
