@@ -11,7 +11,7 @@ const getPreciosH = async (req, res) => {
     }
 } ;
 
-const getPreciosHById = async (req, res) => {
+const getPrecioHById = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query(querysPrecioH.getPrecioHById, [id]);
@@ -63,7 +63,7 @@ const deletePrecioH = async (req, res) => {
 
 export {
     getPreciosH,
-    getPreciosHById,
+    getPrecioHById,
     createPrecioH,
     updatePrecioH,
     deletePrecioH

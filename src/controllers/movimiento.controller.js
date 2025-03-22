@@ -11,7 +11,7 @@ const getMovimientos = async (req, res) => {
     }
 } ;
 
-const getMovimientosById = async (req, res) => {
+const getMovimientoById = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query(querysMovimientos.getMovimientosById, [id]);
@@ -63,7 +63,7 @@ const deleteMovimiento = async (req, res) => {
 
 export {
     getMovimientos,
-    getMovimientosById,
+    getMovimientoById,
     createMovimiento,
     updateMovimiento,
     deleteMovimiento
