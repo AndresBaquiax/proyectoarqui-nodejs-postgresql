@@ -1,2 +1,7 @@
 export * from "./connection.js"
 export { querysEmpleados } from "./querys.js"
+export { querysCategorias } from "./querys.js"
+export { querysProductos } from "./querys.js"
+export { querysInventariosl } from "./querys.js"
+export { querysMovimientoInventario } from "./querys.js"
+export { querysPrecioHistorial } from "./querys.js"
