@@ -8,4 +8,5 @@ export default {
     dbPassword: process.env.DB_PASSWORD || '',
     dbServer: process.env.DB_SERVER || '',
     dbDatabase: process.env.DB_DATABASE || '',
+    dbPort: process.env.DB_PORT || 5432
 }

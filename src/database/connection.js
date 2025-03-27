@@ -8,7 +8,7 @@ const dbsettings = {
     user: config.dbUser,
     password: config.dbPassword,
     database: config.dbDatabase,
-    port: config.dbPort, // Puerto por defecto de PostgreSQL
+    port: config.dbPort
 };
 
 const pool = new Pool(dbsettings);
