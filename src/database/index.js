@@ -1,2 +1,2 @@
 export * from "./connection.js"
-export { querysEmpleados, querysTipoServicio } from "./querys.js"
+export { querysEmpleados, querysTipoServicio, querysServicio } from "./querys.js"

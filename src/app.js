@@ -5,6 +5,7 @@ import cors from 'cors';
 //Import routes
 import empleadosRoutes from './routes/empleados.routes.js';
 import tiposervicioRoutes from './routes/tiposervicio.routes.js';
+import servicioRoutes from './routes/servicio.routes.js';
 
 dotenv.config();
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.urlencoded({extended: false}));
 //Routes
 app.use("/tallerrepuestos", empleadosRoutes);
 app.use("/tallerrepuestos", tiposervicioRoutes);
+app.use("/tallerrepuestos", servicioRoutes);
 
 
 export default app;
