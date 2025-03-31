@@ -20,3 +20,11 @@ export const querysVehiculos = {
     updateVehiculo: 'SELECT actualizar_vehiculo($1, $2, $3, $4, $5, $6, $7, $8)',
     deleteVehiculo: 'SELECT eliminar_vehiculo($1)'
 };
+
+export const querysVentas = {
+    getVentas: 'SELECT * FROM vista_ventas',
+    getVentaById: 'SELECT * FROM obtener_venta_por_id($1)',
+    createVenta: 'SELECT crear_venta($1, $2, $3, $4, $5)',
+    updateVenta: 'SELECT actualizar_venta($1, $2, $3, $4, $5, $6)',
+    deleteVenta: 'SELECT eliminar_venta($1)'
+};  
