@@ -14,6 +14,26 @@ export const getEmpleados = async (req, res) => {
     }
 };
 
+// --------------------- GET BY ID ---------------------
+export const getEmpleadoById = async (req, res) => {
+    try {
+        const { idempleado } = req.params;
+
+        // Obtenemos la conexion
+        const empleado = await getConnection();
+
+        // Ejecutamos la consulta
+        const result = await empleado.query(querysEmpleados.getEmpleadoById, [idempleado]);
+
+        // Liberamos la conexion
+        empleado.release();
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
 // --------------------- POST ---------------------
 export const prueba = async (req, res) => {
     try {
@@ -28,11 +48,16 @@ export const prueba = async (req, res) => {
 // --------------------- POST ---------------------
 export const postEmpleado = async (req, res) => {
     try {
-        const { nombre, apellido, telefono, email, cargo } = req.body;
+        let { estado } = req.body;
+        const { nombre, apellido, telefono, email, cargo, salario } = req.body;
 
         // Validamos los datos
-        if (!nombre || !apellido || !telefono || !email || !cargo) {
+        if (!nombre || !apellido || !telefono || !email || !cargo || !salario ) {
             return res.status(400).json({ msg: "Bad Request. Please fill all fields." });
+        }
+
+        if (!estado) {
+            estado = "1";
         }
 
         // Obtenemos la conexion
@@ -44,7 +69,9 @@ export const postEmpleado = async (req, res) => {
             apellido,
             telefono,
             email,
-            cargo
+            cargo,
+            salario,
+            estado
         ]);
 
         // Liberamos la conexion
@@ -59,12 +86,18 @@ export const postEmpleado = async (req, res) => {
 // --------------------- PUT ---------------------
 export const putEmpleado = async (req, res) => {
     try {
+        let { estado } = req.body;
         const { idempleado } = req.params;
-        const { nombre, apellido, telefono, email, cargo } = req.body;
+        const { nombre, apellido, telefono, email, cargo, salario } = req.body;
 
         // Validamos los datos
-        if (!nombre || !apellido || !telefono || !email || !cargo) {
+        if (!nombre || !apellido || !telefono || !email || !cargo || !salario ) {
             return res.status(400).json({ msg: "Bad Request. Please fill all fields." });
+        }
+
+        
+        if (!estado) {
+            estado = "1";
         }
 
         // Obtenemos la conexion
@@ -72,18 +105,40 @@ export const putEmpleado = async (req, res) => {
 
         // Ejecutamos la consulta
         await empleado.query(querysEmpleados.putEmpleado, [
+            idempleado,
             nombre,
             apellido,
             telefono,
             email,
             cargo,
-            idempleado
+            salario,
+            estado
         ]);
 
         // Liberamos la conexion
         empleado.release();
 
         res.json({ msg: "Employee updated successfully" });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+// --------------------- DELETE ---------------------
+export const deleteEmpleado = async (req, res) => {
+    try {
+        const { idempleado } = req.params;
+
+        // Obtenemos la conexion
+        const empleado = await getConnection();
+
+        // Ejecutamos la consulta
+        await empleado.query(querysEmpleados.deleteEmpleado, [idempleado]);
+
+        // Liberamos la conexion
+        empleado.release();
+
+        res.json({ msg: "Employee deleted successfully" });
     } catch (error) {
         res.status(500).send(error.message);
     }
