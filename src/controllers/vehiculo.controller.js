@@ -27,7 +27,7 @@ const createVehiculo = async (req, res) => {
     let { placa, marca, modelo, anio, tipovehiculo, idcliente, status } = req.body;
 
     try {
-        anio = parseInt(anio); // Convertir anio a número entero
+        anio = parseInt(anio); 
         const result = await pool.query(querysVehiculos.createVehiculo, [placa, marca, modelo, anio, tipovehiculo, idcliente, status]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
