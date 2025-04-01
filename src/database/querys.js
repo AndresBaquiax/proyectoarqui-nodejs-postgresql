@@ -6,18 +6,17 @@ export const querysEmpleados = {
 };
 
 export const querysClientes = {
-    getClientes: 'SELECT * FROM cliente ORDER BY idcliente',
-    getClienteById: 'SELECT * FROM cliente WHERE idcliente = $1',
-    createCliente: 'INSERT INTO cliente (nombre, apellido, nit, telefono, email, status, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING *',
-    updateCliente: 'UPDATE cliente SET nombre = $1, apellido = $2, nit = $3, telefono = $4, email = $5, status = $6, updated_at = NOW() WHERE idcliente = $7 RETURNING *',
-    deleteCliente: 'UPDATE cliente SET status = 0, updated_at = NOW() WHERE idcliente = $1'
+    getClientes: 'SELECT * FROM vista_clientes',
+    getClienteById: 'SELECT * FROM obtener_cliente_por_id($1)',
+    createCliente: 'SELECT crear_cliente($1, $2, $3, $4, $5, $6)',
+    updateCliente: 'SELECT actualizar_cliente($1, $2, $3, $4, $5, $6, $7)',
+    deleteCliente: 'SELECT eliminar_cliente($1)'
 };
 
-
 export const querysVehiculos = {
-    getVehiculos: 'SELECT * FROM vehiculo ORDER BY idvehiculo',
-    getVehiculoById: 'SELECT * FROM vehiculo WHERE idvehiculo = $1',
-    createVehiculo: 'INSERT INTO vehiculo (placa, marca, modelo, anio, tipovehiculo, idcliente, status, created_at, updated_at) VALUES ($1, $2, $3, $4::INTEGER, $5, $6, $7, NOW(), NOW()) RETURNING *',
-    updateVehiculo: 'UPDATE vehiculo SET placa = $1, marca = $2, modelo = $3, anio = $4, tipovehiculo = $5, idcliente = $6, status = $7, updated_at = NOW() WHERE idvehiculo = $8 RETURNING *',
-    deleteVehiculo: 'UPDATE vehiculo SET status = 0, updated_at = NOW() WHERE idvehiculo = $1'
+    getVehiculos: 'SELECT * FROM vista_vehiculos',
+    getVehiculoById: 'SELECT * FROM obtener_vehiculo_por_id($1)',
+    createVehiculo: 'SELECT crear_vehiculo($1, $2, $3, $4, $5, $6, $7)',
+    updateVehiculo: 'SELECT actualizar_vehiculo($1, $2, $3, $4, $5, $6, $7, $8)',
+    deleteVehiculo: 'SELECT eliminar_vehiculo($1)'
 };
