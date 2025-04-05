@@ -23,8 +23,8 @@ app.use(express.urlencoded({extended: false}));
 
 //Routes
 app.use("/tallerrepuestos", empleadosRoutes);
-app.use('/api', movimientosRoutes);
-app.use('/api', preciohistorial);
-app.use('/api', devolucion);
+app.use('/tallerrepuestos', movimientosRoutes);
+app.use('/tallerrepuestos', preciohistorial);
+app.use('/tallerrepuestos', devolucion);
 
 export default app;
