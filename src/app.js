@@ -13,6 +13,7 @@ import productosRoutes from './routes/productos.routes.js';
 import inventarioslRoutes from './routes/inventariosl.routes.js';
 import movimientosRoutes from './routes/movimientos.routes.js';
 import preciohistoriaRoutes from './routes/preciohistorial.routes.js';
+import ventaRoutes from './routes/venta.routes.js';
 
 dotenv.config();
 const app = express();
@@ -37,5 +38,6 @@ app.use("/tallerrepuestos", inventarioslRoutes);
 app.use("/tallerrepuestos", movimientosRoutes);
 app.use("/tallerrepuestos", preciohistoriaRoutes);
 
+app.use('/api/ventas', ventaRoutes);
 
 export default app;
