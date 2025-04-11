@@ -14,7 +14,6 @@ import inventarioslRoutes from './routes/inventariosl.routes.js';
 import movimientosRoutes from './routes/movimientos.routes.js';
 import preciohistoriaRoutes from './routes/preciohistorial.routes.js';
 import ventaRoutes from './routes/venta.routes.js';
-import movimientosRoutes from './routes/movimientos.routes.js';
 import preciohistorial from './routes/preciohistorial.routes.js';
 import devolucion from './routes/devolution.routes.js';
 
@@ -42,8 +41,7 @@ app.use("/tallerrepuestos", productosRoutes);
 app.use("/tallerrepuestos", inventarioslRoutes);
 app.use("/tallerrepuestos", movimientosRoutes);
 app.use("/tallerrepuestos", preciohistoriaRoutes);
-
-app.use('/api/ventas', ventaRoutes);app.use('/tallerrepuestos', movimientosRoutes);
+app.use('/tallerrepuestos', ventaRoutes);
 app.use('/tallerrepuestos', preciohistorial);
 app.use('/tallerrepuestos', devolucion);
 

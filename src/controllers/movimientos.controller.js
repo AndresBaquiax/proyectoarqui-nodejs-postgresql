@@ -108,5 +108,5 @@ export const deleteMovimientoInventario = async (req, res) => {
     console.error("Error in deleteMovimientoInventario:", error);
     res.status(500).send("An error occurred while deleting the inventory movement.");
   }
-};import { getConnection, querysMovimientoInventario } from "../database/index.js";
+};
 
