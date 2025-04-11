@@ -2,8 +2,23 @@ Generar SECRET_KEY: node -e "console.log(require('crypto').randomBytes(64).toStr
 SECRET_KEY=
 PORT = 4000
 
-DB_USER = root
-DB_PASSWORD =
+LOCALHOST
+DB_USER = postgres
+DB_PASSWORD = root
 DB_SERVER = localhost
 DB_DATABASE = taller_repuestos
 DB_PORT = 5432
+
+RAILWAY
+DB_USER = postgres
+DB_PASSWORD = pytGIMtpgUgqNhWotmGnZVgSyMPpzdiF
+DB_SERVER = switchyard.proxy.rlwy.net
+DB_DATABASE = railway
+DB_PORT = 23141
+
+SUPABASE - VERCEL
+DB_USER = postgres.maxorwwewaasdoxrcxoc
+DB_PASSWORD = iXM3YRf9Z6LkfQ3j
+DB_SERVER = aws-0-us-east-1.pooler.supabase.com
+DB_DATABASE = postgres
+DB_PORT = 6543

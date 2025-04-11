@@ -37,7 +37,7 @@ const updateCliente = async (req, res) => {
     const { id } = req.params;
     const { nombre, apellido, nit, telefono, email, status } = req.body;
     try {
-        const result = await pool.query(querysClientes.updateCliente, [nombre, apellido, nit, telefono, email, status, id]);
+        const result = await pool.query(querysClientes.updateCliente, [id, nombre, apellido, nit, telefono, email, status]);
         if (result.rowCount === 0) {
             return res.status(404).json({ message: "Cliente no encontrado" });
         }
