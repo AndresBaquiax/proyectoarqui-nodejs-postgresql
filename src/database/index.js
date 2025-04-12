@@ -1,5 +1,7 @@
 export * from "./connection.js"
-export { querysEmpleados, querysTipoServicio, querysServicio } from "./querys.js"
+export { querysEmpleados} from "./querys.js"
+export { querysTipoServicio } from "./querys.js"
+export { querysServicio } from "./querys.js"
 export { querysCategorias } from "./querys.js"
 export { querysProductos } from "./querys.js"
 export { querysInventariosl } from "./querys.js"

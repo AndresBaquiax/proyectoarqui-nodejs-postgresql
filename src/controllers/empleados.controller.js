@@ -35,29 +35,13 @@ export const getEmpleadoById = async (req, res) => {
 };
 
 // --------------------- POST ---------------------
-export const prueba = async (req, res) => {
-    try {
-        res.json({
-            message: "Hola tonotos, esta es una prueba usando vercel como host de la API"
-        });
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-};
-
-// --------------------- POST ---------------------
 export const postEmpleado = async (req, res) => {
     try {
-        let { estado } = req.body;
         const { nombre, apellido, telefono, email, cargo, salario } = req.body;
 
         // Validamos los datos
         if (!nombre || !apellido || !telefono || !email || !cargo || !salario ) {
             return res.status(400).json({ msg: "Bad Request. Please fill all fields." });
-        }
-
-        if (!estado) {
-            estado = "1";
         }
 
         // Obtenemos la conexion
@@ -71,7 +55,6 @@ export const postEmpleado = async (req, res) => {
             email,
             cargo,
             salario,
-            estado
         ]);
 
         // Liberamos la conexion
@@ -86,18 +69,12 @@ export const postEmpleado = async (req, res) => {
 // --------------------- PUT ---------------------
 export const putEmpleado = async (req, res) => {
     try {
-        let { estado } = req.body;
         const { idempleado } = req.params;
         const { nombre, apellido, telefono, email, cargo, salario } = req.body;
 
         // Validamos los datos
         if (!nombre || !apellido || !telefono || !email || !cargo || !salario ) {
             return res.status(400).json({ msg: "Bad Request. Please fill all fields." });
-        }
-
-        
-        if (!estado) {
-            estado = "1";
         }
 
         // Obtenemos la conexion
@@ -111,8 +88,7 @@ export const putEmpleado = async (req, res) => {
             telefono,
             email,
             cargo,
-            salario,
-            estado
+            salario
         ]);
 
         // Liberamos la conexion

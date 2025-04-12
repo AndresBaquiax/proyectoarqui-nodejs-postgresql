@@ -1,6 +1,7 @@
 import { pool } from '../database/connection.js';
 import { querysClientes } from '../database/querys.js';
 
+// --------------------- GET ---------------------
 const getClientes = async (req, res) => {
     try {
         const result = await pool.query(querysClientes.getClientes);
@@ -10,6 +11,7 @@ const getClientes = async (req, res) => {
     }
 };
 
+// --------------------- GET BY ID ---------------------
 const getClienteById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -23,6 +25,7 @@ const getClienteById = async (req, res) => {
     }
 };
 
+// --------------------- POST ---------------------
 const createCliente = async (req, res) => {
     const { nombre, apellido, nit, telefono, email, status } = req.body;
     try {
@@ -33,6 +36,7 @@ const createCliente = async (req, res) => {
     }
 };
 
+// --------------------- PUT ---------------------
 const updateCliente = async (req, res) => {
     const { id } = req.params;
     const { nombre, apellido, nit, telefono, email, status } = req.body;
@@ -47,6 +51,7 @@ const updateCliente = async (req, res) => {
     }
 };
 
+// --------------------- DELETE ---------------------
 const deleteCliente = async (req, res) => {
     const { id } = req.params;
     try {

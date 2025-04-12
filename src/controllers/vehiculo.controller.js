@@ -1,6 +1,7 @@
 import { pool } from '../database/connection.js';
 import { querysVehiculos } from '../database/querys.js';
 
+// --------------------- GET ---------------------
 const getVehiculos = async (req, res) => {
     try {
         const result = await pool.query(querysVehiculos.getVehiculos);
@@ -10,6 +11,7 @@ const getVehiculos = async (req, res) => {
     }
 };
 
+// --------------------- GET BY ID ---------------------
 const getVehiculoById = async (req, res) => {
     const { id } = req.params;
     try {
@@ -23,6 +25,7 @@ const getVehiculoById = async (req, res) => {
     }
 };
 
+// --------------------- POST ---------------------
 const createVehiculo = async (req, res) => {
     let { placa, marca, modelo, anio, tipovehiculo, idcliente, status } = req.body;
 
@@ -35,6 +38,7 @@ const createVehiculo = async (req, res) => {
     }
 };
 
+// --------------------- PUT ---------------------
 const updateVehiculo = async (req, res) => {
     const { id } = req.params;
     const { placa, marca, modelo, anio, tipovehiculo, idcliente, status } = req.body;
@@ -49,6 +53,7 @@ const updateVehiculo = async (req, res) => {
     }
 };
 
+// --------------------- DELETE ---------------------
 const deleteVehiculo = async (req, res) => {
     const { id } = req.params;
     try {
