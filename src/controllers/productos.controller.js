@@ -109,3 +109,31 @@ export const deleteProducto = async (req, res) => {
     res.status(500).send("An error occurred while deleting the product.");
   }
 };
+// --------------------- REABASTECER STOCK ---------------------
+export const postAbastecerStock = async (req, res, next) => {
+  const { idProducto, cantidad } = req.body;
+  if (idProducto == null || cantidad == null) {
+    return res.status(400).json({ msg: "Debe enviar idProducto y cantidad." });
+  }
+
+  try {
+    const connection = await getConnection();
+    const result = await connection.query(
+      querysProductos.agregarStock,
+      [idProducto, cantidad]
+    );
+    connection.release();
+    const idLote = result.rows[0]?.idlote;
+    return res.status(200).json({
+      msg: "Stock reabastecido correctamente.",
+      idProducto,
+      idLote
+    });
+  } catch (error) {
+    console.error("Error en postAbastecerStock:", error);
+    if (/no existe/.test(error.message)) {
+      return res.status(404).json({ msg: `Producto ${idProducto} not found.` });
+    }
+    next(error);
+  }
+};

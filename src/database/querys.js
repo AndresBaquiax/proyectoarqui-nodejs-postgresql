@@ -15,11 +15,13 @@ export const querysCategorias = {
 };
 
 export const querysProductos = {
+    postInventariol: "CALL insertar_inventariolote($1, $2)",// idProducto, cantidad, fechaAdquisicion, activo
     getProductos: "SELECT * FROM seleccionar_productos()",
     getProducto: "SELECT * FROM seleccionar_producto($1)",
     postProducto: "CALL insertar_producto($1, $2, $3, $4, $5, $6)",
     putProducto: "CALL actualizar_producto($7, $1, $2, $3, $4, $5, $6)",
-    deleteProducto: "CALL eliminar_producto($1)"
+    deleteProducto: "CALL eliminar_producto($1)",
+    agregarStock:       "SELECT * FROM agregar_stock($1, $2)"//agregado
 };
 
 export const querysInventariosl = {
