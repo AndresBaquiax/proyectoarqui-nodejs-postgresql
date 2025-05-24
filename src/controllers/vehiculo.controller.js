@@ -27,11 +27,11 @@ const getVehiculoById = async (req, res) => {
 
 // --------------------- POST ---------------------
 const createVehiculo = async (req, res) => {
-    let { placa, marca, modelo, anio, tipovehiculo, idcliente, status } = req.body;
+    const { placa, marca, modelo, anio, tipovehiculo, idcliente, status } = req.body;
 
     try {
-        anio = parseInt(anio); 
-        const result = await pool.query(querysVehiculos.createVehiculo, [placa, marca, modelo, anio, tipovehiculo, idcliente, status]);
+        const anioInt = parseInt(anio); 
+        const result = await pool.query(querysVehiculos.createVehiculo, [placa, marca, modelo, anioInt, tipovehiculo, idcliente, status]);
         res.status(201).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -43,7 +43,8 @@ const updateVehiculo = async (req, res) => {
     const { id } = req.params;
     const { placa, marca, modelo, anio, tipovehiculo, idcliente, status } = req.body;
     try {
-        const result = await pool.query(querysVehiculos.updateVehiculo, [placa, marca, modelo, anio, tipovehiculo, idcliente, status, id]);
+        const anioInt = parseInt(anio);
+        const result = await pool.query(querysVehiculos.updateVehiculo, [id, placa, marca, modelo, anioInt, tipovehiculo, idcliente, status]);
         if (result.rowCount === 0) {
             return res.status(404).json({ message: "Vehículo no encontrado" });
         }
