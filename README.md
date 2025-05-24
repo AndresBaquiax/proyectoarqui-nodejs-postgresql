@@ -459,9 +459,13 @@ docker run -p 4000:4000 umesmicros/taller-repuestos
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
 
 ## 👨‍💻 Autor
+- Diego Andres Baquiax Barrios
+- Miguel Angel Garcia Sapon
+- Enrique Armando Rodriguez Tax
+- Diego Fernango Carpio Alvarado
 
 **Proyecto Final - Arquitectura de Sistemas II**
-- Universidad: [Tu Universidad]
+- Universidad: Universidad Mesoamericana - Sede Quetzaltenango
 - Semestre: 7mo Semestre
 - Año: 2025
 
