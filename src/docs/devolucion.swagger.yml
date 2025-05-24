@@ -1,0 +1,222 @@
+paths:
+  /devolucion:
+    get:
+      summary: Obtener todas las devoluciones
+      description: Retorna una lista de todas las devoluciones registradas en el sistema.
+      tags:
+        - Devoluciones
+      responses:
+        '200':
+          description: Lista de devoluciones obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    iddevolucion:
+                      type: integer
+                      description: ID único de la devolución.
+                      example: 1
+                    fecharealizada:
+                      type: string
+                      format: date
+                      description: Fecha en que se realizó la devolución.
+                      example: "2025-01-15"
+                    motivo:
+                      type: string
+                      description: Motivo o razón de la devolución.
+                      example: "Producto defectuoso - no funciona correctamente"
+                    monto:
+                      type: number
+                      format: float
+                      description: Monto de la devolución.
+                      example: 150.75
+                    idventa:
+                      type: integer
+                      description: ID de la venta asociada a la devolución.
+                      example: 5
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro de devolución.
+                      example: "2025-01-15T10:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro de devolución.
+                      example: "2025-01-15T10:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving devolution."
+    post:
+      summary: Crear una nueva devolución
+      description: Registra una nueva devolución en el sistema.
+      tags:
+        - Devoluciones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - iddevolucion
+                - fecharealizada
+                - motivo
+                - monto
+                - idventa
+              properties:
+                iddevolucion:
+                  type: integer
+                  description: ID único de la devolución.
+                  example: 1
+                fecharealizada:
+                  type: string
+                  format: date
+                  description: Fecha en que se realizó la devolución.
+                  example: "2025-01-15"
+                motivo:
+                  type: string
+                  description: Motivo o razón de la devolución.
+                  example: "Producto defectuoso - no funciona correctamente"
+                monto:
+                  type: number
+                  format: float
+                  minimum: 0
+                  description: Monto de la devolución (debe ser mayor o igual a 0).
+                  example: 150.75
+                idventa:
+                  type: integer
+                  description: ID de la venta asociada a la devolución.
+                  example: 5
+      responses:
+        '200':
+          description: Devolución creada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Devolution added successfully."
+        '400':
+          description: Solicitud incorrecta. Errores de validación.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Validation errors."
+                  errors:
+                    type: array
+                    description: Lista de errores de validación.
+                    items:
+                      type: string
+                    example: 
+                      - "iddevolution is required."
+                      - "date made is required."
+                      - "motive is required."
+                      - "Price cannot be negative or null."
+                      - "idventa is required."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while adding the devolution to the system."
+  /devolucion/{iddevolucion}:
+    get:
+      summary: Obtener una devolución por ID
+      description: Retorna los detalles de una devolución específica basada en su ID.
+      tags:
+        - Devoluciones
+      parameters:
+        - name: iddevolucion
+          in: path
+          required: true
+          description: ID único de la devolución a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles de la devolución obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  iddevolucion:
+                    type: integer
+                    description: ID único de la devolución.
+                    example: 1
+                  fecharealizada:
+                    type: string
+                    format: date
+                    description: Fecha en que se realizó la devolución.
+                    example: "2025-01-15"
+                  motivo:
+                    type: string
+                    description: Motivo o razón de la devolución.
+                    example: "Producto defectuoso - no funciona correctamente"
+                  monto:
+                    type: number
+                    format: float
+                    description: Monto de la devolución.
+                    example: 150.75
+                  idventa:
+                    type: integer
+                    description: ID de la venta asociada a la devolución.
+                    example: 5
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro de devolución.
+                    example: "2025-01-15T10:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro de devolución.
+                    example: "2025-01-15T10:30:00.000Z"
+        '404':
+          description: Devolución no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Devolution not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving the devolution."

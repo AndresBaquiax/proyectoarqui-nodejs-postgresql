@@ -1,0 +1,331 @@
+paths:
+  /inventariosl:
+    get:
+      summary: Obtener todos los lotes de inventario
+      description: Retorna una lista de todos los lotes de inventario registrados en el sistema.
+      tags:
+        - Inventario por Lotes
+      responses:
+        '200':
+          description: Lista de lotes de inventario obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idlote:
+                      type: integer
+                      description: ID único del lote de inventario.
+                      example: 1
+                    idproducto:
+                      type: integer
+                      description: ID del producto asociado al lote.
+                      example: 15
+                    cantidad:
+                      type: integer
+                      description: Cantidad de productos en el lote.
+                      example: 50
+                    fechaadquisicion:
+                      type: string
+                      format: date
+                      description: Fecha de adquisición del lote.
+                      example: "2025-01-10"
+                    activo:
+                      type: boolean
+                      description: Estado del lote (true = activo, false = inactivo).
+                      example: true
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro del lote.
+                      example: "2025-01-10T08:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro del lote.
+                      example: "2025-01-10T08:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving inventory lots."
+    post:
+      summary: Crear un nuevo lote de inventario
+      description: Registra un nuevo lote de inventario en el sistema.
+      tags:
+        - Inventario por Lotes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idproducto
+                - cantidad
+                - fechaadquisicion
+              properties:
+                idproducto:
+                  type: integer
+                  description: ID del producto asociado al lote.
+                  example: 15
+                cantidad:
+                  type: integer
+                  minimum: 0
+                  description: Cantidad de productos en el lote (debe ser mayor o igual a 0).
+                  example: 50
+                fechaadquisicion:
+                  type: string
+                  format: date
+                  description: Fecha de adquisición del lote.
+                  example: "2025-01-10"
+                activo:
+                  type: boolean
+                  description: Estado del lote (true = activo, false = inactivo). Por defecto es true.
+                  example: true
+      responses:
+        '200':
+          description: Lote de inventario creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Inventory lot added successfully."
+        '400':
+          description: Solicitud incorrecta. Errores de validación.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Validation errors."
+                  errors:
+                    type: array
+                    description: Lista de errores de validación.
+                    items:
+                      type: string
+                    example: 
+                      - "idproducto is required."
+                      - "cantidad is required."
+                      - "cantidad cannot be negative."
+                      - "fechaadquisicion is required."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while adding the inventory lot."
+  /inventariosl/{idlote}:
+    get:
+      summary: Obtener un lote de inventario por ID
+      description: Retorna los detalles de un lote de inventario específico basado en su ID.
+      tags:
+        - Inventario por Lotes
+      parameters:
+        - name: idlote
+          in: path
+          required: true
+          description: ID único del lote de inventario a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del lote de inventario obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idlote:
+                    type: integer
+                    description: ID único del lote de inventario.
+                    example: 1
+                  idproducto:
+                    type: integer
+                    description: ID del producto asociado al lote.
+                    example: 15
+                  cantidad:
+                    type: integer
+                    description: Cantidad de productos en el lote.
+                    example: 50
+                  fechaadquisicion:
+                    type: string
+                    format: date
+                    description: Fecha de adquisición del lote.
+                    example: "2025-01-10"
+                  activo:
+                    type: boolean
+                    description: Estado del lote (true = activo, false = inactivo).
+                    example: true
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro del lote.
+                    example: "2025-01-10T08:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro del lote.
+                    example: "2025-01-10T08:30:00.000Z"
+        '404':
+          description: Lote de inventario no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Inventory lot not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving the inventory lot."
+    put:
+      summary: Actualizar un lote de inventario existente
+      description: Actualiza los datos de un lote de inventario registrado en el sistema.
+      tags:
+        - Inventario por Lotes
+      parameters:
+        - name: idlote
+          in: path
+          required: true
+          description: ID único del lote de inventario a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idproducto:
+                  type: integer
+                  description: ID del producto asociado al lote.
+                  example: 15
+                cantidad:
+                  type: integer
+                  minimum: 0
+                  description: Cantidad de productos en el lote (debe ser mayor o igual a 0).
+                  example: 45
+                fechaadquisicion:
+                  type: string
+                  format: date
+                  description: Fecha de adquisición del lote.
+                  example: "2025-01-10"
+                activo:
+                  type: boolean
+                  description: Estado del lote (true = activo, false = inactivo).
+                  example: true
+      responses:
+        '200':
+          description: Lote de inventario actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Inventory lot updated successfully."
+        '404':
+          description: Lote de inventario no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Inventory lot not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while updating the inventory lot."
+    delete:
+      summary: Eliminar un lote de inventario
+      description: Elimina un lote de inventario del sistema.
+      tags:
+        - Inventario por Lotes
+      parameters:
+        - name: idlote
+          in: path
+          required: true
+          description: ID único del lote de inventario a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Lote de inventario eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Inventory successfully removed."
+        '404':
+          description: Lote de inventario no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Inventory lot not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while deleting the inventory lot."

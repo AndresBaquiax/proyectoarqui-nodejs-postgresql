@@ -1,0 +1,425 @@
+paths:
+  /vehiculos:
+    get:
+      summary: Obtener todos los vehículos
+      description: Retorna una lista de todos los vehículos registrados en el sistema.
+      tags:
+        - Vehículos
+      responses:
+        '200':
+          description: Lista de vehículos obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID único del vehículo.
+                      example: 1
+                    placa:
+                      type: string
+                      description: Placa del vehículo.
+                      example: "P123ABC"
+                    marca:
+                      type: string
+                      description: Marca del vehículo.
+                      example: "Toyota"
+                    modelo:
+                      type: string
+                      description: Modelo del vehículo.
+                      example: "Corolla"
+                    anio:
+                      type: integer
+                      description: Año de fabricación del vehículo.
+                      example: 2020
+                    tipovehiculo:
+                      type: string
+                      description: Tipo de vehículo.
+                      example: "Sedán"
+                    idcliente:
+                      type: integer
+                      description: ID del cliente propietario del vehículo.
+                      example: 5
+                    status:
+                      type: integer
+                      description: Estado del vehículo (1 = activo, 0 = inactivo).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro.
+                      example: "2025-01-15T14:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro.
+                      example: "2025-01-15T14:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database connection error"
+    post:
+      summary: Crear un nuevo vehículo
+      description: Registra un nuevo vehículo en el sistema.
+      tags:
+        - Vehículos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - placa
+                - marca
+                - modelo
+                - anio
+                - tipovehiculo
+                - idcliente
+              properties:
+                placa:
+                  type: string
+                  description: Placa del vehículo.
+                  example: "P123ABC"
+                marca:
+                  type: string
+                  description: Marca del vehículo.
+                  example: "Toyota"
+                modelo:
+                  type: string
+                  description: Modelo del vehículo.
+                  example: "Corolla"
+                anio:
+                  type: integer
+                  minimum: 1900
+                  maximum: 2030
+                  description: Año de fabricación del vehículo.
+                  example: 2020
+                tipovehiculo:
+                  type: string
+                  description: Tipo de vehículo.
+                  example: "Sedán"
+                idcliente:
+                  type: integer
+                  description: ID del cliente propietario del vehículo.
+                  example: 5
+                status:
+                  type: integer
+                  enum: [0, 1]
+                  description: Estado del vehículo (opcional, por defecto 1 = activo).
+                  example: 1
+      responses:
+        '201':
+          description: Vehículo creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único del vehículo creado.
+                    example: 1
+                  placa:
+                    type: string
+                    description: Placa del vehículo.
+                    example: "P123ABC"
+                  marca:
+                    type: string
+                    description: Marca del vehículo.
+                    example: "Toyota"
+                  modelo:
+                    type: string
+                    description: Modelo del vehículo.
+                    example: "Corolla"
+                  anio:
+                    type: integer
+                    description: Año de fabricación del vehículo.
+                    example: 2020
+                  tipovehiculo:
+                    type: string
+                    description: Tipo de vehículo.
+                    example: "Sedán"
+                  idcliente:
+                    type: integer
+                    description: ID del cliente propietario del vehículo.
+                    example: 5
+                  status:
+                    type: integer
+                    description: Estado del vehículo.
+                    example: 1
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database constraint violation"
+  /vehiculos/{id}:
+    get:
+      summary: Obtener un vehículo por ID
+      description: Retorna los detalles de un vehículo específico basado en su ID.
+      tags:
+        - Vehículos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del vehículo a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del vehículo obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único del vehículo.
+                    example: 1
+                  placa:
+                    type: string
+                    description: Placa del vehículo.
+                    example: "P123ABC"
+                  marca:
+                    type: string
+                    description: Marca del vehículo.
+                    example: "Toyota"
+                  modelo:
+                    type: string
+                    description: Modelo del vehículo.
+                    example: "Corolla"
+                  anio:
+                    type: integer
+                    description: Año de fabricación del vehículo.
+                    example: 2020
+                  tipovehiculo:
+                    type: string
+                    description: Tipo de vehículo.
+                    example: "Sedán"
+                  idcliente:
+                    type: integer
+                    description: ID del cliente propietario del vehículo.
+                    example: 5
+                  status:
+                    type: integer
+                    description: Estado del vehículo (1 = activo, 0 = inactivo).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro.
+                    example: "2025-01-15T14:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro.
+                    example: "2025-01-15T14:30:00.000Z"
+        '404':
+          description: Vehículo no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Vehículo no encontrado"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database connection error"
+    put:
+      summary: Actualizar un vehículo existente
+      description: Actualiza los datos de un vehículo registrado en el sistema.
+      tags:
+        - Vehículos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del vehículo a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - placa
+                - marca
+                - modelo
+                - anio
+                - tipovehiculo
+                - idcliente
+                - status
+              properties:
+                placa:
+                  type: string
+                  description: Placa del vehículo.
+                  example: "P123XYZ"
+                marca:
+                  type: string
+                  description: Marca del vehículo.
+                  example: "Toyota"
+                modelo:
+                  type: string
+                  description: Modelo del vehículo.
+                  example: "Corolla GLI"
+                anio:
+                  type: integer
+                  minimum: 1900
+                  maximum: 2030
+                  description: Año de fabricación del vehículo.
+                  example: 2021
+                tipovehiculo:
+                  type: string
+                  description: Tipo de vehículo.
+                  example: "Sedán"
+                idcliente:
+                  type: integer
+                  description: ID del cliente propietario del vehículo.
+                  example: 5
+                status:
+                  type: integer
+                  enum: [0, 1]
+                  description: Estado del vehículo (1 = activo, 0 = inactivo).
+                  example: 1
+      responses:
+        '200':
+          description: Vehículo actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único del vehículo.
+                    example: 1
+                  placa:
+                    type: string
+                    description: Placa del vehículo.
+                    example: "P123XYZ"
+                  marca:
+                    type: string
+                    description: Marca del vehículo.
+                    example: "Toyota"
+                  modelo:
+                    type: string
+                    description: Modelo del vehículo.
+                    example: "Corolla GLI"
+                  anio:
+                    type: integer
+                    description: Año de fabricación del vehículo.
+                    example: 2021
+                  tipovehiculo:
+                    type: string
+                    description: Tipo de vehículo.
+                    example: "Sedán"
+                  idcliente:
+                    type: integer
+                    description: ID del cliente propietario del vehículo.
+                    example: 5
+                  status:
+                    type: integer
+                    description: Estado del vehículo.
+                    example: 1
+        '404':
+          description: Vehículo no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Vehículo no encontrado"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database constraint violation"
+    delete:
+      summary: Eliminar un vehículo (borrado lógico)
+      description: Realiza un borrado lógico del vehículo en el sistema.
+      tags:
+        - Vehículos
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del vehículo a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Vehículo eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Vehículo eliminado"
+        '404':
+          description: Vehículo no encontrado o ya eliminado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Vehículo no encontrado o ya eliminado"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database connection error"

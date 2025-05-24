@@ -1,0 +1,366 @@
+paths:
+  /empleados:
+    get:
+      summary: Obtener todos los empleados
+      description: Retorna una lista de todos los empleados registrados en el sistema.
+      tags:
+        - Empleados
+      responses:
+        '200':
+          description: Lista de empleados obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idempleado:
+                      type: integer
+                      description: ID único del empleado.
+                      example: 3
+                    nombre:
+                      type: string
+                      description: Nombre del empleado.
+                      example: "Miguel"
+                    apellido:
+                      type: string
+                      description: Apellido del empleado.
+                      example: "Sapon"
+                    telefono:
+                      type: string
+                      description: Teléfono del empleado.
+                      example: "59483162"
+                    email:
+                      type: string
+                      description: Correo electrónico del empleado.
+                      example: "miguel@gmail.com"
+                    cargo:
+                      type: string
+                      description: Cargo o puesto del empleado.
+                      example: "Ayudante de mecanico"
+                    salario:
+                      type: number
+                      format: float
+                      description: Salario del empleado.
+                      example: 3500
+                    status:
+                      type: integer
+                      description: Estado del empleado (1 = activo, 0 = inactivo).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro del empleado.
+                      example: "2025-04-21T19:59:56.299Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro del empleado.
+                      example: "2025-04-21T19:59:56.299Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    post:
+      summary: Crear un nuevo empleado
+      description: Agrega un nuevo empleado al sistema.
+      tags:
+        - Empleados
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del empleado.
+                  example: "Miguel"
+                apellido:
+                  type: string
+                  description: Apellido del empleado.
+                  example: "Sapon"
+                telefono:
+                  type: string
+                  description: Teléfono del empleado.
+                  example: "59483162"
+                email:
+                  type: string
+                  description: Correo electrónico del empleado.
+                  example: "miguel@gmail.com"
+                cargo:
+                  type: string
+                  description: Cargo o puesto del empleado.
+                  example: "Ayudante de mecanico"
+                salario:
+                  type: number
+                  format: float
+                  description: Salario del empleado.
+                  example: 3500
+      responses:
+        '201':
+          description: Empleado creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Employee added successfully"
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+  /empleados/{idempleado}:
+    get:
+      summary: Obtener un empleado por ID
+      description: Retorna los detalles de un empleado específico basado en su ID.
+      tags:
+        - Empleados
+      parameters:
+        - name: idempleado
+          in: path
+          required: true
+          description: ID único del empleado a consultar.
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Detalles del empleado obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idempleado:
+                    type: integer
+                    description: ID único del empleado.
+                    example: 3
+                  nombre:
+                    type: string
+                    description: Nombre del empleado.
+                    example: "Miguel"
+                  apellido:
+                    type: string
+                    description: Apellido del empleado.
+                    example: "Sapon"
+                  telefono:
+                    type: string
+                    description: Teléfono del empleado.
+                    example: "59483162"
+                  email:
+                    type: string
+                    description: Correo electrónico del empleado.
+                    example: "miguel@gmail.com"
+                  cargo:
+                    type: string
+                    description: Cargo o puesto del empleado.
+                    example: "Ayudante de mecanico"
+                  salario:
+                    type: number
+                    format: float
+                    description: Salario del empleado.
+                    example: 3500
+                  status:
+                    type: integer
+                    description: Estado del empleado (1 = activo, 0 = inactivo).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro del empleado.
+                    example: "2025-04-21T19:59:56.299Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro del empleado.
+                    example: "2025-04-21T19:59:56.299Z"
+        '404':
+          description: Empleado no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Employee not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    put:
+      summary: Actualizar un empleado existente
+      description: Actualiza los datos de un empleado registrado en el sistema.
+      tags:
+        - Empleados
+      parameters:
+        - name: idempleado
+          in: path
+          required: true
+          description: ID único del empleado a actualizar.
+          schema:
+            type: integer
+            example: 3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del empleado.
+                  example: "Miguel"
+                apellido:
+                  type: string
+                  description: Apellido del empleado.
+                  example: "Sapon"
+                telefono:
+                  type: string
+                  description: Teléfono del empleado.
+                  example: "59483162"
+                email:
+                  type: string
+                  description: Correo electrónico del empleado.
+                  example: "miguel@gmail.com"
+                cargo:
+                  type: string
+                  description: Cargo o puesto del empleado.
+                  example: "Ayudante de mecanico"
+                salario:
+                  type: number
+                  format: float
+                  description: Salario del empleado.
+                  example: 3500
+      responses:
+        '200':
+          description: Empleado actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Employee updated successfully"
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios o el ID no es válido.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '404':
+          description: Empleado no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Employee not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    delete:
+      summary: Eliminar un empleado
+      description: Cambia el estado de un empleado a inactivo en el sistema.
+      tags:
+        - Empleados
+      parameters:
+        - name: idempleado
+          in: path
+          required: true
+          description: ID único del empleado a eliminar.
+          schema:
+            type: integer
+            example: 3
+      responses:
+        '200':
+          description: Empleado eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Employee deleted successfully"
+        '404':
+          description: Empleado no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Employee not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"

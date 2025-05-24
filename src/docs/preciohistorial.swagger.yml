@@ -1,0 +1,346 @@
+paths:
+  /preciohistorial:
+    get:
+      summary: Obtener todo el historial de precios
+      description: Retorna una lista de todos los registros del historial de precios de productos en el sistema.
+      tags:
+        - Precio Historial
+      responses:
+        '200':
+          description: Lista del historial de precios obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idhistorial:
+                      type: integer
+                      description: ID único del registro de historial de precios.
+                      example: 1
+                    idproducto:
+                      type: integer
+                      description: ID del producto asociado al cambio de precio.
+                      example: 15
+                    precioanterior:
+                      type: number
+                      format: decimal
+                      description: Precio anterior del producto.
+                      example: 125.50
+                    precionuevo:
+                      type: number
+                      format: decimal
+                      description: Precio nuevo del producto.
+                      example: 135.75
+                    fechacambio:
+                      type: string
+                      format: date-time
+                      description: Fecha y hora del cambio de precio.
+                      example: "2025-01-15T10:30:00.000Z"
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro.
+                      example: "2025-01-15T10:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro.
+                      example: "2025-01-15T10:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving price history."
+    post:
+      summary: Crear un nuevo registro de historial de precios
+      description: Registra un nuevo cambio de precio en el historial del sistema.
+      tags:
+        - Precio Historial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idproducto
+                - precioanterior
+                - precionuevo
+              properties:
+                idproducto:
+                  type: integer
+                  description: ID del producto asociado al cambio de precio.
+                  example: 15
+                precioanterior:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Precio anterior del producto (debe ser mayor o igual a 0).
+                  example: 125.50
+                precionuevo:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Precio nuevo del producto (debe ser mayor o igual a 0).
+                  example: 135.75
+      responses:
+        '200':
+          description: Registro de historial de precios creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Price history record added successfully."
+        '400':
+          description: Solicitud incorrecta. Errores de validación.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Validation errors."
+                  errors:
+                    type: array
+                    description: Lista de errores de validación.
+                    items:
+                      type: string
+                    example: 
+                      - "idproducto is required."
+                      - "precioanterior is required."
+                      - "precionuevo is required."
+                      - "Prices cannot be negative."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while adding the price history record."
+  /preciohistorial/{idhistorial}:
+    get:
+      summary: Obtener un registro de historial de precios por ID
+      description: Retorna los detalles de un registro específico del historial de precios basado en su ID.
+      tags:
+        - Precio Historial
+      parameters:
+        - name: idhistorial
+          in: path
+          required: true
+          description: ID único del registro de historial de precios a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del registro de historial de precios obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idhistorial:
+                    type: integer
+                    description: ID único del registro de historial de precios.
+                    example: 1
+                  idproducto:
+                    type: integer
+                    description: ID del producto asociado al cambio de precio.
+                    example: 15
+                  precioanterior:
+                    type: number
+                    format: decimal
+                    description: Precio anterior del producto.
+                    example: 125.50
+                  precionuevo:
+                    type: number
+                    format: decimal
+                    description: Precio nuevo del producto.
+                    example: 135.75
+                  fechacambio:
+                    type: string
+                    format: date-time
+                    description: Fecha y hora del cambio de precio.
+                    example: "2025-01-15T10:30:00.000Z"
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro.
+                    example: "2025-01-15T10:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro.
+                    example: "2025-01-15T10:30:00.000Z"
+        '404':
+          description: Registro de historial de precios no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Price history record not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving the price history record."
+    put:
+      summary: Actualizar un registro de historial de precios existente
+      description: Actualiza los datos de un registro del historial de precios en el sistema.
+      tags:
+        - Precio Historial
+      parameters:
+        - name: idhistorial
+          in: path
+          required: true
+          description: ID único del registro de historial de precios a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idproducto
+                - precioanterior
+                - precionuevo
+              properties:
+                idproducto:
+                  type: integer
+                  description: ID del producto asociado al cambio de precio.
+                  example: 15
+                precioanterior:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Precio anterior del producto (debe ser mayor o igual a 0).
+                  example: 125.50
+                precionuevo:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Precio nuevo del producto (debe ser mayor o igual a 0).
+                  example: 140.00
+      responses:
+        '200':
+          description: Registro de historial de precios actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Price history record updated successfully."
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '404':
+          description: Registro de historial de precios no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Price history record not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while updating the price history record."
+    delete:
+      summary: Eliminar un registro de historial de precios
+      description: Elimina un registro del historial de precios del sistema.
+      tags:
+        - Precio Historial
+      parameters:
+        - name: idhistorial
+          in: path
+          required: true
+          description: ID único del registro de historial de precios a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Registro de historial de precios eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Price history record successfully removed."
+        '404':
+          description: Registro de historial de precios no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Price history record not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while deleting the price history record."

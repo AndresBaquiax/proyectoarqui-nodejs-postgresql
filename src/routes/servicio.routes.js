@@ -3,10 +3,10 @@ import { getServicio, getServicioById, postServicio, putServicio, deleteServicio
 
 const router = Router();
 
-router.get("/servicio", getServicio);
-router.get("/servicio/:idservicio", getServicioById);
-router.post("/servicio", postServicio);
-router.put("/servicio/:idservicio", putServicio);
-router.delete("/servicio/:idservicio", deleteServicio);
+router.get("/servicios", getServicio);
+router.get("/servicios/:idservicio", getServicioById);
+router.post("/servicios", postServicio);
+router.put("/servicios/:idservicio", putServicio);
+router.delete("/servicios/:idservicio", deleteServicio);
 
 export default router;

@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Servicio de la aplicación Node.js (conecta a Supabase)
+  nodejs-app:
+    container_name: taller-repuestos
+    image: umesmicros/taller-repuestos
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: production
+      SECRET_KEY: f6e11bffbb342444ce15c240fb7aa588a9dfd2b84706a3a0b5035b78f8ee38f090b63ed992af97f48c2c2b1f9b83af7824abe254be1d7e43c7123d920ce0c52a
+      PORT: 4000
+      # Configuración para Supabase (producción)
+      DB_USER: postgres.maxorwwewaasdoxrcxoc
+      DB_PASSWORD: iXM3YRf9Z6LkfQ3j
+      DB_SERVER: aws-0-us-east-1.pooler.supabase.com
+      DB_DATABASE: postgres
+      DB_PORT: 6543
+    ports:
+      - "4000:4000"
+    volumes:
+      # Para desarrollo: monta el código fuente para hot-reload
+      - ./src:/app/src:ro
+      - ./package.json:/app/package.json:ro
+    networks:
+      - mantenimiento-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  mantenimiento-network:
+    driver: bridge
+    name: mantenimiento-vehiculos-network
+    

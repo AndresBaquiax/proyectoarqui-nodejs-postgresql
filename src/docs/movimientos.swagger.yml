@@ -1,0 +1,368 @@
+paths:
+  /movimientos:
+    get:
+      summary: Obtener todos los movimientos de inventario
+      description: Retorna una lista de todos los movimientos de inventario registrados en el sistema.
+      tags:
+        - Movimientos de Inventario
+      responses:
+        '200':
+          description: Lista de movimientos de inventario obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idmovimiento:
+                      type: integer
+                      description: ID único del movimiento de inventario.
+                      example: 1
+                    idlote:
+                      type: integer
+                      description: ID del lote de inventario asociado.
+                      example: 5
+                    idproducto:
+                      type: integer
+                      description: ID del producto asociado al movimiento.
+                      example: 15
+                    cantidad:
+                      type: integer
+                      description: Cantidad de productos en el movimiento.
+                      example: 10
+                    tipo:
+                      type: string
+                      enum: [entrada, salida]
+                      description: Tipo de movimiento (entrada o salida).
+                      example: "salida"
+                    descripcion:
+                      type: string
+                      description: Descripción del movimiento de inventario.
+                      example: "Venta de filtros de aceite a cliente"
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro del movimiento.
+                      example: "2025-01-15T14:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro del movimiento.
+                      example: "2025-01-15T14:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving inventory movements."
+    post:
+      summary: Crear un nuevo movimiento de inventario
+      description: Registra un nuevo movimiento de inventario en el sistema.
+      tags:
+        - Movimientos de Inventario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idlote
+                - idproducto
+                - cantidad
+                - tipo
+                - descripcion
+              properties:
+                idlote:
+                  type: integer
+                  description: ID del lote de inventario asociado.
+                  example: 5
+                idproducto:
+                  type: integer
+                  description: ID del producto asociado al movimiento.
+                  example: 15
+                cantidad:
+                  type: integer
+                  minimum: 0
+                  description: Cantidad de productos en el movimiento (debe ser mayor o igual a 0).
+                  example: 10
+                tipo:
+                  type: string
+                  enum: [entrada, salida]
+                  description: Tipo de movimiento (entrada o salida).
+                  example: "salida"
+                descripcion:
+                  type: string
+                  description: Descripción del movimiento de inventario.
+                  example: "Venta de filtros de aceite a cliente"
+      responses:
+        '200':
+          description: Movimiento de inventario creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Inventory movement added successfully."
+        '400':
+          description: Solicitud incorrecta. Errores de validación.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Validation errors."
+                  errors:
+                    type: array
+                    description: Lista de errores de validación.
+                    items:
+                      type: string
+                    example: 
+                      - "idlote is required."
+                      - "idproducto is required."
+                      - "cantidad is required."
+                      - "cantidad cannot be negative."
+                      - "tipo must be either 'entrada' or 'salida'."
+                      - "descripcion is required."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while adding the inventory movement."
+  /movimientos/{idmovimiento}:
+    get:
+      summary: Obtener un movimiento de inventario por ID
+      description: Retorna los detalles de un movimiento de inventario específico basado en su ID.
+      tags:
+        - Movimientos de Inventario
+      parameters:
+        - name: idmovimiento
+          in: path
+          required: true
+          description: ID único del movimiento de inventario a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del movimiento de inventario obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idmovimiento:
+                    type: integer
+                    description: ID único del movimiento de inventario.
+                    example: 1
+                  idlote:
+                    type: integer
+                    description: ID del lote de inventario asociado.
+                    example: 5
+                  idproducto:
+                    type: integer
+                    description: ID del producto asociado al movimiento.
+                    example: 15
+                  cantidad:
+                    type: integer
+                    description: Cantidad de productos en el movimiento.
+                    example: 10
+                  tipo:
+                    type: string
+                    enum: [entrada, salida]
+                    description: Tipo de movimiento (entrada o salida).
+                    example: "salida"
+                  descripcion:
+                    type: string
+                    description: Descripción del movimiento de inventario.
+                    example: "Venta de filtros de aceite a cliente"
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro del movimiento.
+                    example: "2025-01-15T14:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro del movimiento.
+                    example: "2025-01-15T14:30:00.000Z"
+        '404':
+          description: Movimiento de inventario no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Inventory movement not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving the inventory movement."
+    put:
+      summary: Actualizar un movimiento de inventario existente
+      description: Actualiza los datos de un movimiento de inventario registrado en el sistema.
+      tags:
+        - Movimientos de Inventario
+      parameters:
+        - name: idmovimiento
+          in: path
+          required: true
+          description: ID único del movimiento de inventario a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idlote
+                - idproducto
+                - cantidad
+                - tipo
+                - descripcion
+              properties:
+                idlote:
+                  type: integer
+                  description: ID del lote de inventario asociado.
+                  example: 5
+                idproducto:
+                  type: integer
+                  description: ID del producto asociado al movimiento.
+                  example: 15
+                cantidad:
+                  type: integer
+                  minimum: 0
+                  description: Cantidad de productos en el movimiento (debe ser mayor o igual a 0).
+                  example: 8
+                tipo:
+                  type: string
+                  enum: [entrada, salida]
+                  description: Tipo de movimiento (entrada o salida).
+                  example: "salida"
+                descripcion:
+                  type: string
+                  description: Descripción del movimiento de inventario.
+                  example: "Venta de filtros de aceite a cliente - cantidad corregida"
+      responses:
+        '200':
+          description: Movimiento de inventario actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Inventory movement updated successfully."
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '404':
+          description: Movimiento de inventario no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Inventory movement not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while updating the inventory movement."
+    delete:
+      summary: Eliminar un movimiento de inventario
+      description: Elimina un movimiento de inventario del sistema.
+      tags:
+        - Movimientos de Inventario
+      parameters:
+        - name: idmovimiento
+          in: path
+          required: true
+          description: ID único del movimiento de inventario a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Movimiento de inventario eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Inventory movement successfully removed."
+        '404':
+          description: Movimiento de inventario no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Inventory movement not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while deleting the inventory movement."

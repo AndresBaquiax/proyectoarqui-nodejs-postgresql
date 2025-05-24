@@ -1,0 +1,380 @@
+paths:
+  /clientes:
+    get:
+      summary: Obtener todos los clientes
+      description: Retorna una lista de todos los clientes registrados en el sistema.
+      tags:
+        - Clientes
+      responses:
+        '200':
+          description: Lista de clientes obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID único del cliente.
+                      example: 1
+                    nombre:
+                      type: string
+                      description: Nombre del cliente.
+                      example: "Juan Carlos"
+                    apellido:
+                      type: string
+                      description: Apellido del cliente.
+                      example: "Pérez García"
+                    nit:
+                      type: string
+                      description: Número de identificación tributaria del cliente.
+                      example: "12345678-9"
+                    telefono:
+                      type: string
+                      description: Teléfono del cliente.
+                      example: "2234-5678"
+                    email:
+                      type: string
+                      description: Correo electrónico del cliente.
+                      example: "juan.perez@email.com"
+                    status:
+                      type: integer
+                      description: Estado del cliente (1 = activo, 0 = inactivo).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro del cliente.
+                      example: "2025-04-21T19:59:56.299Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro del cliente.
+                      example: "2025-04-21T19:59:56.299Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    post:
+      summary: Crear un nuevo cliente
+      description: Agrega un nuevo cliente al sistema.
+      tags:
+        - Clientes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del cliente.
+                  example: "Juan Carlos"
+                apellido:
+                  type: string
+                  description: Apellido del cliente.
+                  example: "Pérez García"
+                nit:
+                  type: string
+                  description: Número de identificación tributaria del cliente.
+                  example: "12345678-9"
+                telefono:
+                  type: string
+                  description: Teléfono del cliente.
+                  example: "2234-5678"
+                email:
+                  type: string
+                  description: Correo electrónico del cliente.
+                  example: "juan.perez@email.com"
+                status:
+                  type: integer
+                  description: Estado del cliente (1 = activo, 0 = inactivo).
+                  example: 1
+      responses:
+        '201':
+          description: Cliente creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único del cliente creado.
+                    example: 1
+                  nombre:
+                    type: string
+                    description: Nombre del cliente.
+                    example: "Juan Carlos"
+                  apellido:
+                    type: string
+                    description: Apellido del cliente.
+                    example: "Pérez García"
+                  nit:
+                    type: string
+                    description: Número de identificación tributaria del cliente.
+                    example: "12345678-9"
+                  telefono:
+                    type: string
+                    description: Teléfono del cliente.
+                    example: "2234-5678"
+                  email:
+                    type: string
+                    description: Correo electrónico del cliente.
+                    example: "juan.perez@email.com"
+                  status:
+                    type: integer
+                    description: Estado del cliente.
+                    example: 1
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+  /clientes/{id}:
+    get:
+      summary: Obtener un cliente por ID
+      description: Retorna los detalles de un cliente específico basado en su ID.
+      tags:
+        - Clientes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del cliente a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del cliente obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único del cliente.
+                    example: 1
+                  nombre:
+                    type: string
+                    description: Nombre del cliente.
+                    example: "Juan Carlos"
+                  apellido:
+                    type: string
+                    description: Apellido del cliente.
+                    example: "Pérez García"
+                  nit:
+                    type: string
+                    description: Número de identificación tributaria del cliente.
+                    example: "12345678-9"
+                  telefono:
+                    type: string
+                    description: Teléfono del cliente.
+                    example: "2234-5678"
+                  email:
+                    type: string
+                    description: Correo electrónico del cliente.
+                    example: "juan.perez@email.com"
+                  status:
+                    type: integer
+                    description: Estado del cliente (1 = activo, 0 = inactivo).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro del cliente.
+                    example: "2025-04-21T19:59:56.299Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro del cliente.
+                    example: "2025-04-21T19:59:56.299Z"
+        '404':
+          description: Cliente no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Cliente no encontrado"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    put:
+      summary: Actualizar un cliente existente
+      description: Actualiza los datos de un cliente registrado en el sistema.
+      tags:
+        - Clientes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del cliente a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del cliente.
+                  example: "Juan Carlos"
+                apellido:
+                  type: string
+                  description: Apellido del cliente.
+                  example: "Pérez García"
+                nit:
+                  type: string
+                  description: Número de identificación tributaria del cliente.
+                  example: "12345678-9"
+                telefono:
+                  type: string
+                  description: Teléfono del cliente.
+                  example: "2234-5678"
+                email:
+                  type: string
+                  description: Correo electrónico del cliente.
+                  example: "juan.perez@email.com"
+                status:
+                  type: integer
+                  description: Estado del cliente (1 = activo, 0 = inactivo).
+                  example: 1
+      responses:
+        '200':
+          description: Cliente actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único del cliente.
+                    example: 1
+                  nombre:
+                    type: string
+                    description: Nombre del cliente.
+                    example: "Juan Carlos"
+                  apellido:
+                    type: string
+                    description: Apellido del cliente.
+                    example: "Pérez García"
+                  nit:
+                    type: string
+                    description: Número de identificación tributaria del cliente.
+                    example: "12345678-9"
+                  telefono:
+                    type: string
+                    description: Teléfono del cliente.
+                    example: "2234-5678"
+                  email:
+                    type: string
+                    description: Correo electrónico del cliente.
+                    example: "juan.perez@email.com"
+                  status:
+                    type: integer
+                    description: Estado del cliente.
+                    example: 1
+        '404':
+          description: Cliente no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Cliente no encontrado"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    delete:
+      summary: Eliminar un cliente
+      description: Cambia el estado de un cliente a inactivo en el sistema.
+      tags:
+        - Clientes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único del cliente a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Cliente eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Cliente eliminado correctamente"
+        '404':
+          description: Cliente no encontrado o ya inactivo.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Cliente no encontrado o ya inactivo"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"

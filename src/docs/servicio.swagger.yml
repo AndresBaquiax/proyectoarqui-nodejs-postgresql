@@ -1,0 +1,314 @@
+paths:
+  /servicios:
+    get:
+      summary: Obtener todos los servicios
+      description: Retorna una lista de todos los servicios registrados en el sistema.
+      tags:
+        - Servicios
+      responses:
+        '200':
+          description: Lista de servicios obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idservicio:
+                      type: integer
+                      description: ID único del servicio.
+                      example: 1
+                    tipovehiculo:
+                      type: string
+                      description: Tipo de vehículo asociado al servicio.
+                      example: SUV
+                    idtiposervicio:
+                      type: integer
+                      description: ID del tipo de servicio.
+                      example: 1
+                    idempleado:
+                      type: integer
+                      description: ID del empleado asignado al servicio.
+                      example: 2
+                    status:
+                      type: integer
+                      description: Estado del servicio (1 = activo, 0 = inactivo).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del servicio.
+                      example: "2025-03-27T04:27:09.363Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del servicio.
+                      example: "2025-03-27T04:39:56.588Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    post:
+      summary: Crear un nuevo servicio
+      description: Agrega un nuevo servicio al sistema.
+      tags:
+        - Servicios
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tipovehiculo:
+                  type: string
+                  description: Tipo de vehículo asociado al servicio.
+                  example: SUV
+                idtiposervicio:
+                  type: integer
+                  description: ID del tipo de servicio.
+                  example: 1
+                idempleado:
+                  type: integer
+                  description: ID del empleado asignado al servicio.
+                  example: 2
+      responses:
+        '201':
+          description: Servicio creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Service added successfully"
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+  /servicios/{idservicio}:
+    get:
+      summary: Obtener un servicio por ID
+      description: Retorna los detalles de un servicio específico basado en su ID.
+      tags:
+        - Servicios
+      parameters:
+        - name: idservicio
+          in: path
+          required: true
+          description: ID único del servicio a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del servicio obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idservicio:
+                    type: integer
+                    description: ID único del servicio.
+                    example: 1
+                  tipovehiculo:
+                    type: string
+                    description: Tipo de vehículo asociado al servicio.
+                    example: SUV
+                  idtiposervicio:
+                    type: integer
+                    description: ID del tipo de servicio.
+                    example: 1
+                  idempleado:
+                    type: integer
+                    description: ID del empleado asignado al servicio.
+                    example: 2
+                  status:
+                    type: integer
+                    description: Estado del servicio (1 = activo, 0 = inactivo).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del servicio.
+                    example: "2025-03-27T04:27:09.363Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del servicio.
+                    example: "2025-03-27T04:39:56.588Z"
+        '404':
+          description: Servicio no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Service not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    put:
+      summary: Actualizar un servicio existente
+      description: Actualiza los datos de un servicio registrado en el sistema.
+      tags:
+        - Servicios
+      parameters:
+        - name: idservicio
+          in: path
+          required: true
+          description: ID único del servicio a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tipovehiculo:
+                  type: string
+                  description: Tipo de vehículo asociado al servicio.
+                  example: SUV
+                idtiposervicio:
+                  type: integer
+                  description: ID del tipo de servicio.
+                  example: 1
+                idempleado:
+                  type: integer
+                  description: ID del empleado asignado al servicio.
+                  example: 2
+      responses:
+        '200':
+          description: Servicio actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Service updated successfully"
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios o el ID no es válido.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '404':
+          description: Servicio no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Service not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    delete:
+      summary: Eliminar un servicio
+      description: Cambia el estado de un servicio a inactivo en el sistema.
+      tags:
+        - Servicios
+      parameters:
+        - name: idservicio
+          in: path
+          required: true
+          description: ID único del servicio a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Servicio eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Service deleted successfully"
+        '404':
+          description: Servicio no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Service not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"

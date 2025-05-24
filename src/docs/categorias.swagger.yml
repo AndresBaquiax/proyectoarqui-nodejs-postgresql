@@ -1,0 +1,306 @@
+paths:
+  /categorias:
+    get:
+      summary: Obtener todas las categorías
+      description: Retorna una lista de todas las categorías registradas en el sistema.
+      tags:
+        - Categorías
+      responses:
+        '200':
+          description: Lista de categorías obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idcategoria:
+                      type: integer
+                      description: ID único de la categoría.
+                      example: 1
+                    nombre:
+                      type: string
+                      description: Nombre de la categoría.
+                      example: "Repuestos de motor"
+                    descripcion:
+                      type: string
+                      description: Descripción detallada de la categoría.
+                      example: "Categoría para repuestos relacionados con el motor del vehículo"
+                    status:
+                      type: integer
+                      description: Estado de la categoría (1 = activo, 0 = inactivo).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación de la categoría.
+                      example: "2025-04-21T19:59:56.299Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización de la categoría.
+                      example: "2025-04-21T19:59:56.299Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    post:
+      summary: Crear una nueva categoría
+      description: Agrega una nueva categoría al sistema.
+      tags:
+        - Categorías
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre de la categoría.
+                  example: "Repuestos de motor"
+                descripcion:
+                  type: string
+                  description: Descripción detallada de la categoría.
+                  example: "Categoría para repuestos relacionados con el motor del vehículo"
+                status:
+                  type: integer
+                  description: Estado de la categoría (1 = activo, 0 = inactivo).
+                  example: 1
+      responses:
+        '201':
+          description: Categoría creada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Category added successfully."
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+  /categorias/{idcategoria}:
+    get:
+      summary: Obtener una categoría por ID
+      description: Retorna los detalles de una categoría específica basada en su ID.
+      tags:
+        - Categorías
+      parameters:
+        - name: idcategoria
+          in: path
+          required: true
+          description: ID único de la categoría a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles de la categoría obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idcategoria:
+                    type: integer
+                    description: ID único de la categoría.
+                    example: 1
+                  nombre:
+                    type: string
+                    description: Nombre de la categoría.
+                    example: "Repuestos de motor"
+                  descripcion:
+                    type: string
+                    description: Descripción detallada de la categoría.
+                    example: "Categoría para repuestos relacionados con el motor del vehículo"
+                  status:
+                    type: integer
+                    description: Estado de la categoría (1 = activo, 0 = inactivo).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación de la categoría.
+                    example: "2025-04-21T19:59:56.299Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización de la categoría.
+                    example: "2025-04-21T19:59:56.299Z"
+        '404':
+          description: Categoría no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Category not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    put:
+      summary: Actualizar una categoría existente
+      description: Actualiza los datos de una categoría registrada en el sistema.
+      tags:
+        - Categorías
+      parameters:
+        - name: idcategoria
+          in: path
+          required: true
+          description: ID único de la categoría a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre de la categoría.
+                  example: "Repuestos de motor"
+                descripcion:
+                  type: string
+                  description: Descripción detallada de la categoría.
+                  example: "Categoría para repuestos relacionados con el motor del vehículo"
+                status:
+                  type: integer
+                  description: Estado de la categoría (1 = activo, 0 = inactivo).
+                  example: 1
+      responses:
+        '200':
+          description: Categoría actualizada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Category updated successfully."
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios o el ID no es válido.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '404':
+          description: Categoría no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Category not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"
+    delete:
+      summary: Eliminar una categoría
+      description: Cambia el estado de una categoría a inactivo en el sistema.
+      tags:
+        - Categorías
+      parameters:
+        - name: idcategoria
+          in: path
+          required: true
+          description: ID único de la categoría a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Categoría eliminada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Category deleted successfully."
+        '404':
+          description: Categoría no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Category not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Internal Server Error"

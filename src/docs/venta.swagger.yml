@@ -1,0 +1,384 @@
+paths:
+  /ventas:
+    get:
+      summary: Obtener todas las ventas
+      description: Retorna una lista de todas las ventas registradas en el sistema.
+      tags:
+        - Ventas
+      responses:
+        '200':
+          description: Lista de ventas obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: ID único de la venta.
+                      example: 1
+                    tipoventa:
+                      type: string
+                      description: Tipo de venta realizada.
+                      example: "Repuestos"
+                    fechaventa:
+                      type: string
+                      format: date
+                      description: Fecha de la venta.
+                      example: "2025-01-15"
+                    totalventa:
+                      type: number
+                      format: decimal
+                      description: Monto total de la venta.
+                      example: 450.75
+                    idcliente:
+                      type: integer
+                      description: ID del cliente que realizó la compra.
+                      example: 5
+                    status:
+                      type: integer
+                      description: Estado de la venta (1 = activa, 0 = cancelada).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro.
+                      example: "2025-01-15T14:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro.
+                      example: "2025-01-15T14:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database connection error"
+    post:
+      summary: Crear una nueva venta
+      description: Registra una nueva venta en el sistema.
+      tags:
+        - Ventas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tipoventa
+                - fechaventa
+                - totalventa
+                - idcliente
+                - status
+              properties:
+                tipoventa:
+                  type: string
+                  description: Tipo de venta realizada.
+                  example: "Repuestos"
+                fechaventa:
+                  type: string
+                  format: date
+                  description: Fecha de la venta.
+                  example: "2025-01-15"
+                totalventa:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Monto total de la venta (debe ser mayor o igual a 0).
+                  example: 450.75
+                idcliente:
+                  type: integer
+                  description: ID del cliente que realizó la compra.
+                  example: 5
+                status:
+                  type: integer
+                  enum: [0, 1]
+                  description: Estado de la venta (1 = activa, 0 = cancelada).
+                  example: 1
+      responses:
+        '201':
+          description: Venta creada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único de la venta creada.
+                    example: 1
+                  tipoventa:
+                    type: string
+                    description: Tipo de venta realizada.
+                    example: "Repuestos"
+                  fechaventa:
+                    type: string
+                    format: date
+                    description: Fecha de la venta.
+                    example: "2025-01-15"
+                  totalventa:
+                    type: number
+                    format: decimal
+                    description: Monto total de la venta.
+                    example: 450.75
+                  idcliente:
+                    type: integer
+                    description: ID del cliente que realizó la compra.
+                    example: 5
+                  status:
+                    type: integer
+                    description: Estado de la venta.
+                    example: 1
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database constraint violation"
+  /ventas/{id}:
+    get:
+      summary: Obtener una venta por ID
+      description: Retorna los detalles de una venta específica basada en su ID.
+      tags:
+        - Ventas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único de la venta a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles de la venta obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único de la venta.
+                    example: 1
+                  tipoventa:
+                    type: string
+                    description: Tipo de venta realizada.
+                    example: "Repuestos"
+                  fechaventa:
+                    type: string
+                    format: date
+                    description: Fecha de la venta.
+                    example: "2025-01-15"
+                  totalventa:
+                    type: number
+                    format: decimal
+                    description: Monto total de la venta.
+                    example: 450.75
+                  idcliente:
+                    type: integer
+                    description: ID del cliente que realizó la compra.
+                    example: 5
+                  status:
+                    type: integer
+                    description: Estado de la venta (1 = activa, 0 = cancelada).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro.
+                    example: "2025-01-15T14:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro.
+                    example: "2025-01-15T14:30:00.000Z"
+        '404':
+          description: Venta no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Venta no encontrada"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database connection error"
+    put:
+      summary: Actualizar una venta existente
+      description: Actualiza los datos de una venta registrada en el sistema.
+      tags:
+        - Ventas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único de la venta a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tipoventa
+                - fechaventa
+                - totalventa
+                - idcliente
+                - status
+              properties:
+                tipoventa:
+                  type: string
+                  description: Tipo de venta realizada.
+                  example: "Servicios y Repuestos"
+                fechaventa:
+                  type: string
+                  format: date
+                  description: Fecha de la venta.
+                  example: "2025-01-15"
+                totalventa:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Monto total de la venta (debe ser mayor o igual a 0).
+                  example: 520.50
+                idcliente:
+                  type: integer
+                  description: ID del cliente que realizó la compra.
+                  example: 5
+                status:
+                  type: integer
+                  enum: [0, 1]
+                  description: Estado de la venta (1 = activa, 0 = cancelada).
+                  example: 1
+      responses:
+        '200':
+          description: Venta actualizada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: ID único de la venta.
+                    example: 1
+                  tipoventa:
+                    type: string
+                    description: Tipo de venta realizada.
+                    example: "Servicios y Repuestos"
+                  fechaventa:
+                    type: string
+                    format: date
+                    description: Fecha de la venta.
+                    example: "2025-01-15"
+                  totalventa:
+                    type: number
+                    format: decimal
+                    description: Monto total de la venta.
+                    example: 520.50
+                  idcliente:
+                    type: integer
+                    description: ID del cliente que realizó la compra.
+                    example: 5
+                  status:
+                    type: integer
+                    description: Estado de la venta.
+                    example: 1
+        '404':
+          description: Venta no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Venta no encontrada"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database constraint violation"
+    delete:
+      summary: Eliminar una venta (borrado lógico)
+      description: Realiza un borrado lógico de la venta en el sistema.
+      tags:
+        - Ventas
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID único de la venta a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Venta eliminada con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Venta eliminada correctamente (borrado lógico)"
+        '404':
+          description: Venta no encontrada.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Venta no encontrada"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Database connection error"

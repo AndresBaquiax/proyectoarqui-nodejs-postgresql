@@ -1,0 +1,452 @@
+paths:
+  /productos:
+    get:
+      summary: Obtener todos los productos
+      description: Retorna una lista de todos los productos registrados en el sistema.
+      tags:
+        - Productos
+      responses:
+        '200':
+          description: Lista de productos obtenida con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    idproducto:
+                      type: integer
+                      description: ID único del producto.
+                      example: 1
+                    nombre:
+                      type: string
+                      description: Nombre del producto.
+                      example: "Filtro de aceite Toyota"
+                    descripcion:
+                      type: string
+                      description: Descripción detallada del producto.
+                      example: "Filtro de aceite compatible con motores Toyota 1.8L y 2.0L"
+                    precio:
+                      type: number
+                      format: decimal
+                      description: Precio unitario del producto.
+                      example: 85.50
+                    id_categoria:
+                      type: integer
+                      description: ID de la categoría a la que pertenece el producto.
+                      example: 3
+                    existencia_minima:
+                      type: integer
+                      description: Cantidad mínima de existencia requerida.
+                      example: 10
+                    status:
+                      type: integer
+                      description: Estado del producto (1 = activo, 0 = inactivo).
+                      example: 1
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de creación del registro.
+                      example: "2025-01-15T14:30:00.000Z"
+                    updated_at:
+                      type: string
+                      format: date-time
+                      description: Fecha de última actualización del registro.
+                      example: "2025-01-15T14:30:00.000Z"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving products."
+    post:
+      summary: Crear un nuevo producto
+      description: Registra un nuevo producto en el sistema.
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - descripcion
+                - precio
+                - id_categoria
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del producto.
+                  example: "Filtro de aceite Toyota"
+                descripcion:
+                  type: string
+                  description: Descripción detallada del producto.
+                  example: "Filtro de aceite compatible con motores Toyota 1.8L y 2.0L"
+                precio:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Precio unitario del producto (debe ser mayor o igual a 0).
+                  example: 85.50
+                id_categoria:
+                  type: integer
+                  description: ID de la categoría a la que pertenece el producto.
+                  example: 3
+                existencia_minima:
+                  type: integer
+                  minimum: 0
+                  description: Cantidad mínima de existencia requerida (opcional, por defecto 10).
+                  example: 15
+                status:
+                  type: integer
+                  enum: [0, 1]
+                  description: Estado del producto (opcional, por defecto 1 = activo).
+                  example: 1
+      responses:
+        '200':
+          description: Producto creado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Product added successfully."
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Bad Request. Please fill all fields."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while adding the product."
+  /productos/{idproducto}:
+    get:
+      summary: Obtener un producto por ID
+      description: Retorna los detalles de un producto específico basado en su ID.
+      tags:
+        - Productos
+      parameters:
+        - name: idproducto
+          in: path
+          required: true
+          description: ID único del producto a consultar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detalles del producto obtenidos con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  idproducto:
+                    type: integer
+                    description: ID único del producto.
+                    example: 1
+                  nombre:
+                    type: string
+                    description: Nombre del producto.
+                    example: "Filtro de aceite Toyota"
+                  descripcion:
+                    type: string
+                    description: Descripción detallada del producto.
+                    example: "Filtro de aceite compatible con motores Toyota 1.8L y 2.0L"
+                  precio:
+                    type: number
+                    format: decimal
+                    description: Precio unitario del producto.
+                    example: 85.50
+                  id_categoria:
+                    type: integer
+                    description: ID de la categoría a la que pertenece el producto.
+                    example: 3
+                  existencia_minima:
+                    type: integer
+                    description: Cantidad mínima de existencia requerida.
+                    example: 10
+                  status:
+                    type: integer
+                    description: Estado del producto (1 = activo, 0 = inactivo).
+                    example: 1
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de creación del registro.
+                    example: "2025-01-15T14:30:00.000Z"
+                  updated_at:
+                    type: string
+                    format: date-time
+                    description: Fecha de última actualización del registro.
+                    example: "2025-01-15T14:30:00.000Z"
+        '404':
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Product not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while retrieving the product."
+    put:
+      summary: Actualizar un producto existente
+      description: Actualiza los datos de un producto registrado en el sistema.
+      tags:
+        - Productos
+      parameters:
+        - name: idproducto
+          in: path
+          required: true
+          description: ID único del producto a actualizar.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nombre
+                - descripcion
+                - precio
+                - id_categoria
+              properties:
+                nombre:
+                  type: string
+                  description: Nombre del producto.
+                  example: "Filtro de aceite Toyota Premium"
+                descripcion:
+                  type: string
+                  description: Descripción detallada del producto.
+                  example: "Filtro de aceite premium compatible con motores Toyota 1.8L y 2.0L"
+                precio:
+                  type: number
+                  format: decimal
+                  minimum: 0
+                  description: Precio unitario del producto (debe ser mayor o igual a 0).
+                  example: 95.75
+                id_categoria:
+                  type: integer
+                  description: ID de la categoría a la que pertenece el producto.
+                  example: 3
+                existencia_minima:
+                  type: integer
+                  minimum: 0
+                  description: Cantidad mínima de existencia requerida (opcional, por defecto 10).
+                  example: 15
+                status:
+                  type: integer
+                  enum: [0, 1]
+                  description: Estado del producto (opcional, por defecto 1 = activo).
+                  example: 1
+      responses:
+        '200':
+          description: Producto actualizado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Product updated successfully."
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios o precio inválido.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "The price must be a valid number."
+        '404':
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Product not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while updating the product."
+    delete:
+      summary: Eliminar un producto
+      description: Elimina un producto del sistema.
+      tags:
+        - Productos
+      parameters:
+        - name: idproducto
+          in: path
+          required: true
+          description: ID único del producto a eliminar.
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Producto eliminado con éxito.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Product successfully removed."
+        '404':
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Product not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while deleting the product."
+  /productos/abastecer:
+    post:
+      summary: Reabastecer stock de un producto
+      description: Agrega stock a un producto existente creando un nuevo lote de inventario.
+      tags:
+        - Productos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - idProducto
+                - cantidad
+              properties:
+                idProducto:
+                  type: integer
+                  description: ID del producto al que se le agregará stock.
+                  example: 15
+                cantidad:
+                  type: integer
+                  minimum: 1
+                  description: Cantidad de unidades a agregar al stock.
+                  example: 50
+      responses:
+        '200':
+          description: Stock reabastecido correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de éxito.
+                    example: "Stock reabastecido correctamente."
+                  idProducto:
+                    type: integer
+                    description: ID del producto reabastecido.
+                    example: 15
+                  idLote:
+                    type: integer
+                    description: ID del nuevo lote de inventario creado.
+                    example: 23
+        '400':
+          description: Solicitud incorrecta. Faltan campos obligatorios.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Debe enviar idProducto y cantidad."
+        '404':
+          description: Producto no encontrado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Producto 15 not found."
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error.
+                    example: "An error occurred while restocking the product."
