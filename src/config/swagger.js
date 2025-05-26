@@ -16,8 +16,20 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API REST para el sistema de mantenimiento de vehículos y gestión de taller de repuestos',
       contact: {
-        name: 'Equipo de Desarrollo',
-        email: 'desarrollo@tallerrepuestos.com'
+        name: 'Diego Andres Baquiax Barrios - 202108036',
+        email: 'diego912@umes.edu.gt',
+      },
+      contact: {
+        name: 'Miguel Angel Garcia Sapon - 202108056',
+        email: 'miguelg@umes.edu.gt',
+      },
+      contact: {
+        name: 'Enrique Armando Rodriguez Tax - 2022080',
+        email: 'enrique_rodri18@umes.edu.gt',
+      },
+      contact: {
+        name: 'Diego Fernando Carpio Alvarado - 2022080',
+        email: 'fercar@umes.edu.gt',
       },
       license: {
         name: 'MIT',
@@ -30,7 +42,7 @@ const swaggerOptions = {
         description: 'Servidor de desarrollo'
       },
       {
-        url: 'https://api.tallerrepuestos.com/tallerrepuestos',
+        url: 'https://tallerrepuestos.vercel.app/',
         description: 'Servidor de producción'
       }
     ],
