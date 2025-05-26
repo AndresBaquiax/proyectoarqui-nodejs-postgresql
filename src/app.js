@@ -16,6 +16,7 @@ import preciohistoriaRoutes from './routes/preciohistorial.routes.js';
 import ventaRoutes from './routes/venta.routes.js';
 import preciohistorial from './routes/preciohistorial.routes.js';
 import devolucion from './routes/devolution.routes.js';
+import pagoRoutes from './routes/pago.routes.js';
 //Import Swagger configuration
 import { swaggerSpec, swaggerUi, swaggerUiOptions } from './config/swagger.js';
 
@@ -47,6 +48,7 @@ app.use("/tallerrepuestos", preciohistoriaRoutes);
 app.use('/tallerrepuestos', ventaRoutes);
 app.use('/tallerrepuestos', preciohistorial);
 app.use('/tallerrepuestos', devolucion);
+app.use('/tallerrepuestos', pagoRoutes);
 
 // Ruta de información de la API
 app.get('/', (req, res) => {

@@ -2,6 +2,10 @@ Generar SECRET_KEY: node -e "console.log(require('crypto').randomBytes(64).toStr
 SECRET_KEY=
 PORT = 4000
 
+# CONFIGURACIÓN DEL SISTEMA DE PAGOS
+PAGO_SERVICE_URL=http://137.184.115.238/pagos
+ID_CAJA=1
+
 LOCALHOST
 DB_USER = postgres
 DB_PASSWORD = root

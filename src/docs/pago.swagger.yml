@@ -1,0 +1,368 @@
+paths:
+  /bancos:
+    get:
+      summary: Obtener bancos disponibles
+      description: Retorna la lista de bancos disponibles del sistema de pagos externo.
+      tags:
+        - Pagos
+      responses:
+        '200':
+          description: Lista de bancos obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bancos:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          description: ID único del banco.
+                          example: "67f04d9bd89964312a94affe"
+                        nombre:
+                          type: string
+                          description: Nombre del banco.
+                          example: "Industrial"
+                        estado:
+                          type: integer
+                          description: Estado del banco (1 = activo, 0 = inactivo).
+                          example: 1
+                        totalTransacciones:
+                          type: integer
+                          description: Total de transacciones del banco.
+                          example: 0
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Mensaje de error.
+                    example: "Error al conectar con el servicio de pagos"
+
+  /metodos-pago:
+    get:
+      summary: Obtener métodos de pago disponibles
+      description: Retorna la lista de métodos de pago disponibles en el sistema.
+      tags:
+        - Pagos
+      responses:
+        '200':
+          description: Lista de métodos de pago obtenida exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metodosPago:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: ID del método de pago.
+                          example: 1
+                        nombre:
+                          type: string
+                          description: Nombre del método de pago.
+                          example: "efectivo"
+        '500':
+          description: Error interno del servidor.
+
+  /verificar-cliente/{nit}:
+    get:
+      summary: Verificar cliente en sistema de pagos
+      description: Verifica si un cliente existe en el sistema de pagos externo usando su NIT.
+      tags:
+        - Pagos
+      parameters:
+        - name: nit
+          in: path
+          required: true
+          description: NIT del cliente a verificar.
+          schema:
+            type: string
+            example: "1234567-8"
+      responses:
+        '200':
+          description: Cliente encontrado en el sistema de pagos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cliente encontrado en el sistema de pagos"
+                  encontrado:
+                    type: boolean
+                    example: true
+                  cliente:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "67e0bf2b1dae516ec25efe4a"
+                      nombre:
+                        type: string
+                        example: "Eduardo Merida"
+                      nit:
+                        type: string
+                        example: "1234567-8"
+                      email:
+                        type: string
+                        example: "acabal@gmail.com"
+                      telefono:
+                        type: string
+                        example: "88888"
+                      tarjetasFidelidad:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            noTarjeta:
+                              type: string
+                              example: "FID-1234567890101-5"
+                            cantidadPuntos:
+                              type: integer
+                              example: 0
+                            fechaExpiracion:
+                              type: string
+                              format: date-time
+                              example: "2027-04-01T17:27:33.890Z"
+        '404':
+          description: Cliente no encontrado en el sistema de pagos.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Cliente no encontrado en el sistema de pagos"
+                  encontrado:
+                    type: boolean
+                    example: false
+        '400':
+          description: NIT es requerido.
+        '500':
+          description: Error interno del servidor.
+
+  /procesar-venta-pago:
+    post:
+      summary: Procesar venta completa con pago
+      description: Crea una nueva venta en el sistema local y procesa el pago en el sistema externo de forma transaccional.
+      tags:
+        - Pagos
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - venta
+                - detalleVenta
+                - metodosPago
+                - nitCliente
+              properties:
+                venta:
+                  type: object
+                  required:
+                    - tipoventa
+                    - totalventa
+                    - idcliente
+                  properties:
+                    tipoventa:
+                      type: string
+                      description: Tipo de venta.
+                      example: "Repuestos"
+                    fechaventa:
+                      type: string
+                      format: date-time
+                      description: Fecha de la venta (opcional, por defecto fecha actual).
+                      example: "2025-01-15T14:30:00.000Z"
+                    totalventa:
+                      type: number
+                      description: Total de la venta.
+                      example: 150.00
+                    idcliente:
+                      type: integer
+                      description: ID del cliente en el sistema local.
+                      example: 5
+                    status:
+                      type: integer
+                      description: Estado de la venta (opcional, por defecto 1).
+                      example: 1
+                detalleVenta:
+                  type: array
+                  description: Detalle de productos/servicios vendidos.
+                  items:
+                    type: object
+                    required:
+                      - nombre
+                      - cantidad
+                      - precio
+                    properties:
+                      nombre:
+                        type: string
+                        description: Nombre del producto/servicio.
+                        example: "Filtro de aceite"
+                      cantidad:
+                        type: integer
+                        description: Cantidad vendida.
+                        example: 2
+                      precio:
+                        type: number
+                        description: Precio unitario.
+                        example: 25.00
+                      descuento:
+                        type: number
+                        description: Descuento aplicado (opcional).
+                        example: 0
+                metodosPago:
+                  type: array
+                  description: Métodos de pago utilizados.
+                  items:
+                    type: object
+                    required:
+                      - idMetodo
+                      - monto
+                    properties:
+                      noTarjeta:
+                        type: string
+                        description: Número de tarjeta (si aplica).
+                        example: "FID-1234567890101-5"
+                      idMetodo:
+                        type: integer
+                        description: ID del método de pago (1=Efectivo, 2=Crédito, 3=Débito, 4=Transferencia, 5=Fidelidad).
+                        example: 1
+                      monto:
+                        type: number
+                        description: Monto pagado con este método.
+                        example: 150.00
+                      idBanco:
+                        type: string
+                        description: ID del banco (si aplica).
+                        example: "67f04d9bd89964312a94affe"
+                nitCliente:
+                  type: string
+                  description: NIT del cliente en el sistema de pagos.
+                  example: "1234567-8"
+      responses:
+        '201':
+          description: Venta y pago procesados exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Venta y pago procesados exitosamente"
+                  venta:
+                    type: object
+                    description: Datos de la venta creada.
+                  pago:
+                    type: object
+                    description: Respuesta del sistema de pagos.
+        '400':
+          description: Faltan datos requeridos.
+        '404':
+          description: Cliente no encontrado en el sistema de pagos.
+        '500':
+          description: Error interno del servidor.
+
+  /procesar-pago/{idVenta}:
+    post:
+      summary: Procesar pago para venta existente
+      description: Procesa el pago en el sistema externo para una venta ya existente en el sistema local.
+      tags:
+        - Pagos
+      parameters:
+        - name: idVenta
+          in: path
+          required: true
+          description: ID de la venta existente.
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - detalleVenta
+                - metodosPago
+                - nitCliente
+              properties:
+                detalleVenta:
+                  type: array
+                  description: Detalle de productos/servicios de la venta.
+                  items:
+                    type: object
+                    properties:
+                      nombre:
+                        type: string
+                        example: "Filtro de aceite"
+                      cantidad:
+                        type: integer
+                        example: 2
+                      precio:
+                        type: number
+                        example: 25.00
+                      descuento:
+                        type: number
+                        example: 0
+                metodosPago:
+                  type: array
+                  description: Métodos de pago utilizados.
+                  items:
+                    type: object
+                    properties:
+                      noTarjeta:
+                        type: string
+                        example: "FID-1234567890101-5"
+                      idMetodo:
+                        type: integer
+                        example: 1
+                      monto:
+                        type: number
+                        example: 150.00
+                      idBanco:
+                        type: string
+                        example: "67f04d9bd89964312a94affe"
+                nitCliente:
+                  type: string
+                  description: NIT del cliente en el sistema de pagos.
+                  example: "1234567-8"
+      responses:
+        '200':
+          description: Pago procesado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Pago procesado exitosamente"
+                  venta:
+                    type: object
+                    description: Datos de la venta.
+                  pago:
+                    type: object
+                    description: Respuesta del sistema de pagos.
+        '404':
+          description: Venta no encontrada o cliente no encontrado en sistema de pagos.
+        '500':
+          description: Error interno del servidor. 
