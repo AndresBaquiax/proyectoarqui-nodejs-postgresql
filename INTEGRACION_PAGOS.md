@@ -10,9 +10,11 @@ Agregar las siguientes variables a tu archivo `.env`:
 
 ```env
 # CONFIGURACIÓN DEL SISTEMA DE PAGOS
-PAGO_SERVICE_URL=http://localhost:3001
+PAGO_SERVICE_URL=http://64.23.169.22:3001/pagos
 ID_CAJA=1
 ```
+
+**Nota:** La URL incluye el puerto `:3001` y la ruta base `/pagos` según la configuración actual del sistema.
 
 ### Instalación de Dependencias
 
@@ -119,6 +121,98 @@ PUT /tallerrepuestos/anular-transaccion/{noTransaccion}
 ```
 
 Anula una transacción existente en el sistema de pagos.
+
+### 9. Crear Devolución
+```
+POST /tallerrepuestos/devoluciones/crear
+```
+
+Crea una devolución para una transacción específica en el sistema de pagos.
+
+**Ejemplo de payload:**
+```json
+{
+    "NoTransaccion": 12345,
+    "Monto": 150.00,
+    "Descripcion": "Producto defectuoso - filtro de aceite no compatible"
+}
+```
+
+### 10. Obtener Devoluciones
+```
+GET /tallerrepuestos/devoluciones/obtener
+```
+
+Obtiene todas las devoluciones, opcionalmente filtradas por rango de fechas.
+
+**Ejemplo de payload (opcional):**
+```json
+{
+    "fechaInicio": "2024-01-01T00:00:00Z",
+    "fechaFinal": "2024-01-31T23:59:59Z"
+}
+```
+
+### 11. Obtener Devolución por Número
+```
+GET /tallerrepuestos/devoluciones/obtener/{noDevolucion}
+```
+
+Obtiene los detalles de una devolución específica por su número.
+
+## Ejemplo Práctico: Realizar una Devolución
+
+### Paso 1: Crear una Devolución
+```bash
+POST /tallerrepuestos/devoluciones/crear
+Content-Type: application/json
+
+{
+    "NoTransaccion": 1001,
+    "Monto": 75.50,
+    "Descripcion": "Producto defectuoso - bujías NGK no compatibles"
+}
+```
+
+**Respuesta exitosa:**
+```json
+{
+    "message": "Devolución creada exitosamente",
+    "devolucion": {
+        "Mensaje": "Devolucion realizada correctamente"
+    }
+}
+```
+
+### Paso 2: Consultar Devoluciones del Mes
+```bash
+GET /tallerrepuestos/devoluciones/obtener
+Content-Type: application/json
+
+{
+    "fechaInicio": "2024-01-01T00:00:00Z",
+    "fechaFinal": "2024-01-31T23:59:59Z"
+}
+```
+
+**Respuesta exitosa:**
+```json
+{
+    "message": "Devoluciones obtenidas exitosamente",
+    "devoluciones": [
+        {
+            "NoDevolucion": 12345,
+            "NoTransaccion": 1001,
+            "Monto": 75.50,
+            "Descripcion": "Producto defectuoso - bujías NGK no compatibles",
+            "NoAutorizacion": "AUTH-DEV-2024-001",
+            "Fecha": "2024-01-15T14:30:00Z",
+            "NotaCredito": "NC-2024-001"
+        }
+    ],
+    "total": 1
+}
+```
 
 ## Ejemplo Práctico: Realizar una Venta
 
@@ -312,9 +406,48 @@ services:
       - "3001:3001"
 ```
 
+## Funcionalidades Implementadas
+
+### Sistema de Pagos ✅
+- ✅ Crear transacciones
+- ✅ Obtener transacciones por número
+- ✅ Anular transacciones
+- ✅ Obtener bancos disponibles
+- ✅ Verificar clientes por NIT
+- ✅ Procesar ventas completas con pago
+
+### Sistema de Devoluciones (NUEVO) ✅
+- ✅ Crear devoluciones para transacciones existentes
+- ✅ Consultar devoluciones con filtros de fecha
+- ✅ Obtener detalles de devoluciones específicas
+- ✅ Generación automática de notas de crédito
+- ✅ Números de autorización para auditoría
+
+### Validaciones y Manejo de Errores ✅
+- ✅ Validación de datos de entrada
+- ✅ Manejo de errores de conectividad
+- ✅ Respuestas estructuradas y descriptivas
+- ✅ Logs detallados para debugging
+
+## URLs y Configuración Actualizada
+
+### Configuración de Producción (Docker)
+```env
+PAGO_SERVICE_URL=http://64.23.169.22:3001/pagos
+ID_CAJA=1
+```
+
+### Rutas Corregidas según Documentación API
+- **Bancos**: `/bancos/obtener` (corregido de `/api/bancos`)
+- **Clientes**: `/cliente/obtener` y `/cliente/obtener/{nit}` (confirmado)
+- **Transacciones**: `/transacciones/crear`, `/transacciones/obtener/{noTransaccion}`, `/transacciones/anular/{noTransaccion}` (confirmado)
+- **Devoluciones**: `/devoluciones/crear`, `/devoluciones/obtener`, `/devoluciones/obtener/{noDevolucion}` (nuevo)
+
 ## Próximos Pasos
 
 1. ✅ **Documentación actualizada** según API real
+2. ✅ **Sistema de devoluciones implementado**
+3. ✅ **Rutas corregidas según documentación**
 2. **Configurar variables de entorno** en tu archivo `.env`
 3. **Probar endpoints** con datos reales
 4. **Implementar logging** para auditoría

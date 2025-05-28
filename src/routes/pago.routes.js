@@ -11,6 +11,11 @@ import {
     anularTransaccionPago,
     procesarVentaConInventario
 } from '../controllers/pago.controller.js';
+import {
+    crearDevolucionController,
+    obtenerDevolucionesController,
+    obtenerDevolucionController
+} from '../controllers/devolucion.controller.js';
 
 const router = express.Router();
 
@@ -43,5 +48,10 @@ router.get('/transaccion/:noTransaccion', getTransaccion);
 
 // Anular transacción
 router.put('/anular-transaccion/:noTransaccion', anularTransaccionPago);
+
+// Rutas de devoluciones del sistema de pagos
+router.post('/devoluciones/crear', crearDevolucionController);
+router.get('/devoluciones/obtener', obtenerDevolucionesController);
+router.get('/devoluciones/obtener/:noDevolucion', obtenerDevolucionController);
 
 export default router; 

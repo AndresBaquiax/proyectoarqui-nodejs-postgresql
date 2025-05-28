@@ -1,4 +1,9 @@
 import { getConnection, querysDevolucion} from "../database/index.js";
+import { 
+    crearDevolucion, 
+    obtenerDevoluciones, 
+    obtenerDevolucion 
+} from '../services/pagoService.js';
 
 // --------------------- GET ALL ---------------------
 export const getDevolucion = async (req, res) => {
@@ -64,4 +69,111 @@ export const postDevolucion = async (req, res) => {
     console.error("Error in postDevolution:", error);
     res.status(500).send("An error occurred while adding the devolution to the system.");
   }
+};
+
+// --------------------- CREAR DEVOLUCIÓN ---------------------
+export const crearDevolucionController = async (req, res) => {
+    try {
+        const { NoTransaccion, Monto, Descripcion } = req.body;
+
+        // Validaciones básicas
+        if (!NoTransaccion || !Monto || !Descripcion) {
+            return res.status(400).json({ 
+                error: "Faltan datos requeridos: NoTransaccion, Monto, Descripcion" 
+            });
+        }
+
+        // Validar que el monto sea positivo
+        if (parseFloat(Monto) <= 0) {
+            return res.status(400).json({ 
+                error: "El monto debe ser mayor a 0" 
+            });
+        }
+
+        // Transformar datos al formato requerido
+        const datosDevolucion = {
+            NoTransaccion: parseInt(NoTransaccion),
+            Monto: parseFloat(Monto),
+            Descripcion: Descripcion.toString()
+        };
+
+        // Crear devolución en el sistema externo
+        const resultado = await crearDevolucion(datosDevolucion);
+
+        res.status(201).json({
+            message: "Devolución creada exitosamente",
+            devolucion: resultado
+        });
+
+    } catch (error) {
+        console.error('Error en crearDevolucionController:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// --------------------- OBTENER DEVOLUCIONES ---------------------
+export const obtenerDevolucionesController = async (req, res) => {
+    try {
+        const { fechaInicio, fechaFinal } = req.body || {};
+
+        // Crear filtro si se proporcionan fechas
+        const filtro = {};
+        if (fechaInicio) {
+            filtro.fechaInicio = fechaInicio;
+        }
+        if (fechaFinal) {
+            filtro.fechaFinal = fechaFinal;
+        }
+
+        // Obtener devoluciones del sistema externo
+        const devoluciones = await obtenerDevoluciones(filtro);
+
+        res.status(200).json({
+            message: "Devoluciones obtenidas exitosamente",
+            devoluciones: devoluciones,
+            total: devoluciones.length
+        });
+
+    } catch (error) {
+        console.error('Error en obtenerDevolucionesController:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// --------------------- OBTENER DEVOLUCIÓN POR NÚMERO ---------------------
+export const obtenerDevolucionController = async (req, res) => {
+    try {
+        const { noDevolucion } = req.params;
+
+        if (!noDevolucion) {
+            return res.status(400).json({ 
+                error: "Número de devolución es requerido" 
+            });
+        }
+
+        // Validar que sea un número
+        const numeroDevolucion = parseInt(noDevolucion);
+        if (isNaN(numeroDevolucion)) {
+            return res.status(400).json({ 
+                error: "El número de devolución debe ser un número válido" 
+            });
+        }
+
+        // Obtener devolución del sistema externo
+        const devolucion = await obtenerDevolucion(numeroDevolucion);
+
+        res.status(200).json({
+            message: "Devolución obtenida exitosamente",
+            devolucion: devolucion
+        });
+
+    } catch (error) {
+        console.error('Error en obtenerDevolucionController:', error);
+        
+        if (error.message.includes('404')) {
+            res.status(404).json({ error: "Devolución no encontrada" });
+        } else {
+            res.status(500).json({ error: error.message });
+        }
+    }
 };

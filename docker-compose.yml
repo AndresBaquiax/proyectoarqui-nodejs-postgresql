@@ -18,6 +18,9 @@ services:
       DB_SERVER: aws-0-us-east-1.pooler.supabase.com
       DB_DATABASE: postgres
       DB_PORT: 6543
+      # Configuración del sistema de pagos
+      PAGO_SERVICE_URL: http://64.23.169.22:3001/pagos
+      ID_CAJA: 1
     ports:
       - "4000:4000"
     volumes:

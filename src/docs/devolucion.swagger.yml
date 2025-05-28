@@ -220,3 +220,194 @@ paths:
                     type: string
                     description: Mensaje de error.
                     example: "An error occurred while retrieving the devolution."
+  /tallerrepuestos/devoluciones/crear:
+    post:
+      tags:
+        - Devoluciones Sistema de Pagos
+      summary: Crear una nueva devolución en el sistema de pagos
+      description: Crea una devolución para una transacción específica en el sistema externo de pagos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - NoTransaccion
+                - Monto
+                - Descripcion
+              properties:
+                NoTransaccion:
+                  type: number
+                  description: Número de la transacción a devolver
+                  example: 12345
+                Monto:
+                  type: number
+                  description: Monto a devolver
+                  minimum: 0.01
+                  example: 150.00
+                Descripcion:
+                  type: string
+                  description: Descripción de la devolución
+                  example: "Producto defectuoso"
+      responses:
+        '201':
+          description: Devolución creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Devolución creada exitosamente"
+                  devolucion:
+                    type: object
+                    properties:
+                      Mensaje:
+                        type: string
+                        example: "Devolucion realizada correctamente"
+        '400':
+          description: Datos faltantes o inválidos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Faltan datos requeridos: NoTransaccion, Monto, Descripcion"
+        '500':
+          description: Error interno del servidor
+
+  /tallerrepuestos/devoluciones/obtener:
+    get:
+      tags:
+        - Devoluciones Sistema de Pagos
+      summary: Obtener todas las devoluciones del sistema de pagos
+      description: Obtiene todas las devoluciones, opcionalmente filtradas por rango de fechas.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fechaInicio:
+                  type: string
+                  format: date-time
+                  description: Fecha de inicio del filtro (opcional)
+                  example: "2024-01-01T00:00:00Z"
+                fechaFinal:
+                  type: string
+                  format: date-time
+                  description: Fecha final del filtro (opcional)
+                  example: "2024-12-31T23:59:59Z"
+      responses:
+        '200':
+          description: Lista de devoluciones obtenida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Devoluciones obtenidas exitosamente"
+                  devoluciones:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DevolucionPagos'
+                  total:
+                    type: number
+                    description: Total de devoluciones encontradas
+                    example: 5
+        '500':
+          description: Error interno del servidor
+
+  /tallerrepuestos/devoluciones/obtener/{noDevolucion}:
+    get:
+      tags:
+        - Devoluciones Sistema de Pagos
+      summary: Obtener devolución por número
+      description: Obtiene los detalles de una devolución específica por su número.
+      parameters:
+        - name: noDevolucion
+          in: path
+          required: true
+          schema:
+            type: number
+          description: Número de la devolución
+          example: 12345
+      responses:
+        '200':
+          description: Devolución encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Devolución obtenida exitosamente"
+                  devolucion:
+                    type: object
+                    properties:
+                      Devolucion:
+                        $ref: '#/components/schemas/DevolucionPagos'
+        '400':
+          description: Número de devolución inválido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "El número de devolución debe ser un número válido"
+        '404':
+          description: Devolución no encontrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Devolución no encontrada"
+        '500':
+          description: Error interno del servidor
+
+components:
+  schemas:
+    DevolucionPagos:
+      type: object
+      properties:
+        NoDevolucion:
+          type: number
+          description: Número único de la devolución
+          example: 12345
+        NoTransaccion:
+          type: number
+          description: Número de la transacción asociada
+          example: 67890
+        Monto:
+          type: number
+          description: Monto devuelto
+          example: 150.00
+        Descripcion:
+          type: string
+          description: Descripción de la devolución
+          example: "Producto defectuoso"
+        NoAutorizacion:
+          type: string
+          description: Número de autorización de la devolución
+          example: "AUTH-DEV-2024-001"
+        Fecha:
+          type: string
+          format: date-time
+          description: Fecha y hora de la devolución
+          example: "2024-01-15T14:30:00Z"
+        NotaCredito:
+          type: string
+          description: Número de nota de crédito generada
+          example: "NC-2024-001"

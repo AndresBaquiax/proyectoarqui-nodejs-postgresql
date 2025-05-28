@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const PAGO_SERVICE_URL = process.env.PAGO_SERVICE_URL || 'http://137.184.115.238/pagos';
+const PAGO_SERVICE_URL = process.env.PAGO_SERVICE_URL || 'http://64.23.169.22:3001/pagos';
 
 // Mapeo de métodos de pago
 export const METODOS_PAGO = {
@@ -52,15 +52,14 @@ export const procesarPago = async (datosPago) => {
 };
 
 /**
- * Obtener bancos disponibles
- * NOTA: Este endpoint no está documentado en la API proporcionada
+ * Obtener bancos disponibles según la documentación
  * @returns {Promise<Array>} - Lista de bancos
  */
 export const obtenerBancos = async () => {
     try {
-        console.log('Intentando obtener bancos desde:', `${PAGO_SERVICE_URL}/api/bancos`);
+        console.log('Obteniendo bancos desde:', `${PAGO_SERVICE_URL}/bancos/obtener`);
         
-        const response = await fetch(`${PAGO_SERVICE_URL}/api/bancos`, {
+        const response = await fetch(`${PAGO_SERVICE_URL}/bancos/obtener`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +67,7 @@ export const obtenerBancos = async () => {
         });
 
         if (!response.ok) {
-            console.warn(`Endpoint de bancos no disponible: ${response.status} ${response.statusText}`);
+            console.warn(`Error al obtener bancos: ${response.status} ${response.statusText}`);
             // Retornar datos mock basados en la información proporcionada
             return [
                 {
@@ -121,7 +120,7 @@ export const obtenerBancos = async () => {
 };
 
 /**
- * Obtener cliente por NIT del sistema de pagos
+ * Buscar cliente por NIT según la documentación de la API de Clientes
  * @param {string} nit - NIT del cliente
  * @returns {Promise<Object|null>} - Cliente encontrado o null
  */
@@ -169,7 +168,7 @@ export const obtenerClientePorNit = async (nit) => {
 };
 
 /**
- * Obtener todos los clientes del sistema de pagos
+ * Obtener todos los clientes según la documentación de la API de Clientes
  * @returns {Promise<Array>} - Lista de clientes
  */
 export const obtenerTodosLosClientes = async () => {
@@ -244,6 +243,89 @@ export const anularTransaccion = async (noTransaccion) => {
     } catch (error) {
         console.error('Error al anular transacción:', error);
         throw new Error(`Error al anular transacción: ${error.message}`);
+    }
+};
+
+/**
+ * Crear devolución según la documentación de la API de Devoluciones
+ * @param {Object} datosDevolucion - Datos de la devolución
+ * @returns {Promise<Object>} - Respuesta del sistema de devoluciones
+ */
+export const crearDevolucion = async (datosDevolucion) => {
+    try {
+        console.log('Creando devolución:', JSON.stringify(datosDevolucion, null, 2));
+        
+        const response = await fetch(`${PAGO_SERVICE_URL}/devoluciones/crear`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datosDevolucion)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Error al crear devolución: ${response.status} ${response.statusText} - ${errorData}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al crear devolución:', error);
+        throw new Error(`Error al conectar con el servicio de devoluciones: ${error.message}`);
+    }
+};
+
+/**
+ * Obtener todas las devoluciones, opcionalmente filtradas por fecha
+ * @param {Object} filtro - Filtros de fecha (opcional)
+ * @returns {Promise<Array>} - Lista de devoluciones
+ */
+export const obtenerDevoluciones = async (filtro = {}) => {
+    try {
+        console.log('Obteniendo devoluciones con filtro:', JSON.stringify(filtro, null, 2));
+        
+        const response = await fetch(`${PAGO_SERVICE_URL}/devoluciones/obtener`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: Object.keys(filtro).length > 0 ? JSON.stringify(filtro) : undefined
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener devoluciones: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data.Devoluciones || [];
+    } catch (error) {
+        console.error('Error al obtener devoluciones:', error);
+        throw new Error(`Error al obtener devoluciones: ${error.message}`);
+    }
+};
+
+/**
+ * Obtener devolución por número
+ * @param {number} noDevolucion - Número de devolución
+ * @returns {Promise<Object>} - Datos de la devolución
+ */
+export const obtenerDevolucion = async (noDevolucion) => {
+    try {
+        const response = await fetch(`${PAGO_SERVICE_URL}/devoluciones/obtener/${noDevolucion}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al obtener devolución: ${response.status} ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error al obtener devolución:', error);
+        throw new Error(`Error al obtener devolución: ${error.message}`);
     }
 };
 
