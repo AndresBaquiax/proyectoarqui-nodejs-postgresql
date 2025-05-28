@@ -8,7 +8,8 @@ import {
     getTodosLosClientes,
     procesarSoloPago,
     getTransaccion,
-    anularTransaccionPago
+    anularTransaccionPago,
+    procesarVentaConInventario
 } from '../controllers/pago.controller.js';
 
 const router = express.Router();
@@ -23,13 +24,16 @@ router.get('/metodos-pago', getMetodosPago);
 router.get('/servicios-transaccion', getServiciosTransaccion);
 
 // Obtener todos los clientes del sistema de pagos
-router.get('/clientes', getTodosLosClientes);
+router.get('/clientes-pago', getTodosLosClientes);
 
 // Verificar si un cliente existe en el sistema de pagos
 router.get('/verificar-cliente/:nit', verificarClientePago);
 
 // Procesar venta completa con pago
 router.post('/procesar-venta-pago', procesarVentaConPago);
+
+// Procesar venta con descuento automático de inventario (sin pago externo)
+router.post('/procesar-venta-inventario', procesarVentaConInventario);
 
 // Procesar solo pago para una venta existente
 router.post('/procesar-pago/:idVenta', procesarSoloPago);

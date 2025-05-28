@@ -1,0 +1,211 @@
+paths:
+  /procesar-venta-inventario:
+    post:
+      summary: Procesar venta con descuento automático de inventario
+      description: Crea una nueva venta en el sistema y descuenta automáticamente los productos del inventario. No requiere integración con sistema de pagos externo.
+      tags:
+        - Ventas con Inventario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - venta
+                - detalleVenta
+              properties:
+                venta:
+                  type: object
+                  required:
+                    - tipoventa
+                    - totalventa
+                    - idcliente
+                  properties:
+                    tipoventa:
+                      type: string
+                      description: Tipo de venta.
+                      example: "Repuestos"
+                    fechaventa:
+                      type: string
+                      format: date-time
+                      description: Fecha de la venta (opcional, por defecto fecha actual).
+                      example: "2025-01-15T14:30:00.000Z"
+                    totalventa:
+                      type: number
+                      description: Total de la venta.
+                      example: 150.00
+                    idcliente:
+                      type: integer
+                      description: ID del cliente en el sistema local.
+                      example: 5
+                    status:
+                      type: integer
+                      description: Estado de la venta (opcional, por defecto 1).
+                      example: 1
+                detalleVenta:
+                  type: array
+                  description: Detalle de productos vendidos que se descontarán del inventario.
+                  items:
+                    type: object
+                    required:
+                      - idProducto
+                      - cantidad
+                    properties:
+                      idProducto:
+                        type: integer
+                        description: ID del producto en el sistema (REQUERIDO para descuento de inventario).
+                        example: 10
+                      nombre:
+                        type: string
+                        description: Nombre del producto (opcional, para referencia).
+                        example: "Filtro de aceite"
+                      cantidad:
+                        type: integer
+                        description: Cantidad vendida.
+                        example: 2
+                      precio:
+                        type: number
+                        description: Precio unitario (opcional, para referencia).
+                        example: 25.00
+            example:
+              venta:
+                tipoventa: "Repuestos"
+                totalventa: 120.00
+                idcliente: 5
+              detalleVenta:
+                - idProducto: 10
+                  nombre: "Filtro de aceite"
+                  cantidad: 2
+                  precio: 25.00
+                - idProducto: 15
+                  nombre: "Bujías NGK"
+                  cantidad: 4
+                  precio: 17.50
+      responses:
+        '201':
+          description: Venta procesada e inventario actualizado exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Venta procesada e inventario actualizado exitosamente"
+                  venta:
+                    type: object
+                    description: Datos de la venta creada.
+                    properties:
+                      id:
+                        type: integer
+                        example: 15
+                      tipoventa:
+                        type: string
+                        example: "Repuestos"
+                      fechaventa:
+                        type: string
+                        example: "2025-01-15T14:30:00.000Z"
+                      totalventa:
+                        type: number
+                        example: 120.00
+                      idcliente:
+                        type: integer
+                        example: 5
+                      status:
+                        type: integer
+                        example: 1
+                  inventario:
+                    type: object
+                    description: Información del descuento de inventario.
+                    properties:
+                      productosDescontados:
+                        type: integer
+                        description: Número de productos diferentes descontados.
+                        example: 2
+                      detalles:
+                        type: array
+                        description: Detalles del descuento por producto.
+                        items:
+                          type: object
+                          properties:
+                            idProducto:
+                              type: integer
+                              example: 10
+                            cantidadVendida:
+                              type: integer
+                              example: 2
+                            movimientos:
+                              type: array
+                              description: Movimientos de lotes afectados.
+                              items:
+                                type: object
+                                properties:
+                                  idLote:
+                                    type: integer
+                                    example: 25
+                                  cantidadDescontada:
+                                    type: integer
+                                    example: 2
+                                  cantidadRestanteLote:
+                                    type: integer
+                                    example: 8
+                            mensaje:
+                              type: string
+                              example: "Producto 10 descontado exitosamente"
+        '400':
+          description: Error de validación o stock insuficiente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Stock insuficiente para algunos productos"
+                  detalles:
+                    type: array
+                    items:
+                      type: string
+                    example: 
+                      - "Producto Filtro de aceite (ID: 10): Stock insuficiente. Disponible: 1, Requerido: 2"
+        '500':
+          description: Error interno del servidor.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error procesando la venta"
+                  detalles:
+                    type: string
+                    example: "Database connection error"
+
+components:
+  schemas:
+    ProductoInventario:
+      type: object
+      required:
+        - idProducto
+        - cantidad
+      properties:
+        idProducto:
+          type: integer
+          description: ID del producto que se va a descontar del inventario.
+          example: 10
+        nombre:
+          type: string
+          description: Nombre del producto (opcional, para referencia).
+          example: "Filtro de aceite"
+        cantidad:
+          type: integer
+          description: Cantidad a descontar del inventario.
+          minimum: 1
+          example: 2
+        precio:
+          type: number
+          description: Precio unitario (opcional, para cálculos).
+          minimum: 0
+          example: 25.00 

@@ -1,5 +1,6 @@
 import { pool } from '../database/connection.js';
 import { querysVentas } from '../database/querys.js';
+import inventoryService from '../services/inventoryService.js';
 import { 
     procesarPago, 
     obtenerBancos, 
@@ -77,6 +78,19 @@ export const procesarVentaConPago = async (req, res) => {
             });
         }
 
+        // Validar que el detalle incluya IDs de productos para descuento de inventario
+        const productosParaDescuento = detalleVenta.filter(item => item.idProducto);
+        if (productosParaDescuento.length > 0) {
+            // Verificar stock disponible antes de procesar la venta
+            const verificacionStock = await inventoryService.verificarStockDisponible(productosParaDescuento);
+            if (!verificacionStock.stockSuficiente) {
+                return res.status(400).json({
+                    error: "Stock insuficiente para algunos productos",
+                    detalles: verificacionStock.errores
+                });
+            }
+        }
+
         // Verificar que el cliente existe en el sistema de pagos
         const clientePagos = await obtenerClientePorNit(nitCliente);
         if (!clientePagos) {
@@ -108,14 +122,41 @@ export const procesarVentaConPago = async (req, res) => {
         // Procesar pago en el sistema externo
         const resultadoPago = await procesarPago(datosPago);
 
-        // Si el pago fue exitoso, confirmar la transacción
+        // Si el pago fue exitoso, descontar productos del inventario
+        let resultadoInventario = null;
+        if (productosParaDescuento.length > 0) {
+            try {
+                resultadoInventario = await inventoryService.descontarProductosVenta(productosParaDescuento, client);
+                console.log(`✅ Inventario actualizado para venta ${ventaCreada.id || ventaCreada.idventa}:`, resultadoInventario.productosDescontados.length, 'productos descontados');
+            } catch (error) {
+                console.error('Error descontando inventario:', error);
+                // Si falla el descuento de inventario, hacer rollback de toda la transacción
+                await client.query('ROLLBACK');
+                return res.status(500).json({
+                    error: "Error actualizando inventario después del pago",
+                    detalles: error.message
+                });
+            }
+        }
+
+        // Si todo fue exitoso, confirmar la transacción
         await client.query('COMMIT');
 
-        res.status(201).json({
+        const respuesta = {
             message: "Venta y pago procesados exitosamente",
             venta: ventaCreada,
             pago: resultadoPago
-        });
+        };
+
+        // Incluir información de inventario si se descontaron productos
+        if (resultadoInventario) {
+            respuesta.inventario = {
+                productosDescontados: resultadoInventario.productosDescontados.length,
+                detalles: resultadoInventario.productosDescontados
+            };
+        }
+
+        res.status(201).json(respuesta);
 
     } catch (error) {
         await client.query('ROLLBACK');
@@ -257,5 +298,81 @@ export const getTodosLosClientes = async (req, res) => {
         res.status(200).json({ clientes });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+
+// --------------------- PROCESAR VENTA CON DESCUENTO DE INVENTARIO (SIN PAGO EXTERNO) ---------------------
+export const procesarVentaConInventario = async (req, res) => {
+    const client = await pool.connect();
+    
+    try {
+        await client.query('BEGIN');
+        
+        const { 
+            venta, 
+            detalleVenta
+        } = req.body;
+
+        // Validaciones básicas
+        if (!venta || !detalleVenta) {
+            return res.status(400).json({ 
+                error: "Faltan datos requeridos: venta, detalleVenta" 
+            });
+        }
+
+        // Validar que el detalle incluya IDs de productos para descuento de inventario
+        const productosParaDescuento = detalleVenta.filter(item => item.idProducto);
+        if (productosParaDescuento.length === 0) {
+            return res.status(400).json({
+                error: "Debe incluir al menos un producto con idProducto para descontar del inventario"
+            });
+        }
+
+        // Verificar stock disponible antes de procesar la venta
+        const verificacionStock = await inventoryService.verificarStockDisponible(productosParaDescuento);
+        if (!verificacionStock.stockSuficiente) {
+            return res.status(400).json({
+                error: "Stock insuficiente para algunos productos",
+                detalles: verificacionStock.errores
+            });
+        }
+
+        // Crear la venta en el sistema
+        const resultVenta = await client.query(querysVentas.createVenta, [
+            venta.tipoventa,
+            venta.fechaventa || new Date().toISOString(),
+            venta.totalventa,
+            venta.idcliente,
+            venta.status || 1
+        ]);
+
+        const ventaCreada = resultVenta.rows[0];
+
+        // Descontar productos del inventario
+        const resultadoInventario = await inventoryService.descontarProductosVenta(productosParaDescuento, client);
+        
+        console.log(`✅ Venta ${ventaCreada.id || ventaCreada.idventa} procesada con descuento de inventario:`, resultadoInventario.productosDescontados.length, 'productos descontados');
+
+        // Confirmar la transacción
+        await client.query('COMMIT');
+
+        res.status(201).json({
+            message: "Venta procesada e inventario actualizado exitosamente",
+            venta: ventaCreada,
+            inventario: {
+                productosDescontados: resultadoInventario.productosDescontados.length,
+                detalles: resultadoInventario.productosDescontados
+            }
+        });
+
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Error al procesar venta con inventario:', error);
+        res.status(500).json({ 
+            error: "Error procesando la venta",
+            detalles: error.message 
+        });
+    } finally {
+        client.release();
     }
 }; 

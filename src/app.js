@@ -17,6 +17,11 @@ import ventaRoutes from './routes/venta.routes.js';
 import preciohistorial from './routes/preciohistorial.routes.js';
 import devolucion from './routes/devolution.routes.js';
 import pagoRoutes from './routes/pago.routes.js';
+import inventoryAlertRoutes from './routes/inventoryAlert.routes.js';
+//Import inventory alert service
+import inventoryAlert from './services/inventoryAlert.js';
+//Import auto discount service
+import autoDiscountService from './services/autoDiscountService.js';
 //Import Swagger configuration
 import { swaggerSpec, swaggerUi, swaggerUiOptions } from './config/swagger.js';
 
@@ -49,6 +54,7 @@ app.use('/tallerrepuestos', ventaRoutes);
 app.use('/tallerrepuestos', preciohistorial);
 app.use('/tallerrepuestos', devolucion);
 app.use('/tallerrepuestos', pagoRoutes);
+app.use('/tallerrepuestos', inventoryAlertRoutes);
 
 // Ruta de información de la API
 app.get('/', (req, res) => {
@@ -82,5 +88,12 @@ app.get('/', (req, res) => {
     ]
   });
 });
+
+// Inicializar sistema de alertas de inventario automáticamente
+// AQUÍ CAMBIAS EL TIEMPO: Cambia el 30 por los minutos que quieras
+inventoryAlert.iniciar(10); // 🎯 CAMBIAR AQUÍ: 10 = cada 10 minutos
+
+// Inicializar descuentos automáticos por antigüedad (5% después de 90 días)
+autoDiscountService.iniciar();
 
 export default app;
